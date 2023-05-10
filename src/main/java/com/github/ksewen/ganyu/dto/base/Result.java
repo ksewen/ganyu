@@ -16,7 +16,7 @@ public class Result<T> {
     private int code;
     private String message;
 
-    private boolean success;
+    private boolean success = false;
     private T data;
 
     public Result() {
@@ -33,13 +33,23 @@ public class Result<T> {
 
     public Result(ResultCode resultCode, String message) {
         this(resultCode, message, null);
+        this.success = ResultCode.SUCCESS.equals(resultCode);
     }
 
     public Result(ResultCode resultCode, String message, T data) {
         this.code = resultCode.getCode();
         this.message = message;
         this.data = data;
+        this.success = ResultCode.SUCCESS.equals(resultCode);
     }
+
+    public Result(int code, String message, boolean success, T data) {
+        this.code = code;
+        this.message = message;
+        this.success = success;
+        this.data = data;
+    }
+
 
     public static Result success() {
         return new Result();
@@ -66,8 +76,7 @@ public class Result<T> {
     }
 
     public static <T> Result<T> operationFailed(T data) {
-        return new Result(ResultCode.OPERATION_FAILED, ResultCode.OPERATION_FAILED.getMessage(),
-                data);
+        return new Result(ResultCode.OPERATION_FAILED, ResultCode.OPERATION_FAILED.getMessage(), data);
     }
 
     public static <T> Result<T> operationFailed(String message, T data) {

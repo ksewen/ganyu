@@ -94,6 +94,8 @@
          -->
         <table tableName="%">
 
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+
             <!--用来修改表中某个列的属性,一个table元素中可以有多个columnOverride元素哈.
                 property属性来指定列要生成的属性名称.
              -->
@@ -102,7 +104,7 @@
 
         <!--<table tableName="person" domainObjectName="Person"/>-->
         <!--<table tableName="department" domainObjectName="Depart"/>-->
-
     </context>
+
 
 </generatorConfiguration>
