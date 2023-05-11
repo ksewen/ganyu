@@ -1,0 +1,50 @@
+server:
+  port: '38080'
+
+spring:
+  application:
+    name: ganyu-service
+  messages:
+    encoding: UTF-8
+    basename: validation-messages
+  datasource:
+    password: '123456'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/ganyu?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&nullCatalogMeansCurrent=true
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      auto-commit: true
+      minimum-idle: 5
+      idle-timeout: 60000
+      connection-timeout: 10000
+      max-lifetime: 100000
+      maximum-pool-size: 10
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    property-naming-strategy: LOWER_CASE
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: '86400000'
+      refresh-token:
+        expiration: '604800000'
+      read-header: Authorization
+      debug: 'true'
+
+
+logging:
+  level:
+    com:
+      github:
+        ksewen:
+          ganyu: DEBUG
+    org:
+      springframework:
+        security: TRACE

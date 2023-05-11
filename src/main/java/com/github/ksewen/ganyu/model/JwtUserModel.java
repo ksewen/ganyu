@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Builder
 public class JwtUserModel implements UserDetails {
 
-    private Integer id;
+    private Long id;
     private String username;
 
     private String nickname;

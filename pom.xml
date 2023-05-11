@@ -39,9 +39,8 @@
 			<artifactId>spring-boot-admin-starter-server</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>3.0.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<dependency>
@@ -108,17 +107,6 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.mybatis.generator</groupId>
-				<artifactId>mybatis-generator-maven-plugin</artifactId>
-				<version>1.4.2</version>
-				<configuration>
-					<!--mybatis的代码生成器的配置文件-->
-					<configurationFile>src/main/resources/mybatis-generator-config.xml</configurationFile>
-					<overwrite>true</overwrite>
-					<includeCompileDependencies>true</includeCompileDependencies>
 				</configuration>
 			</plugin>
 		</plugins>

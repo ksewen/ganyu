@@ -1,6 +1,5 @@
 package com.github.ksewen.ganyu.configuration;
 
-import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.dto.base.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 @Slf4j
-public class ApiExceptionHandler {
+public class CommonExceptionHandler {
 
     @ExceptionHandler(value = { MethodArgumentNotValidException.class, BindException.class })
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)

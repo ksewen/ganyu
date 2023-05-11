@@ -1,6 +1,6 @@
 package com.github.ksewen.ganyu.service;
 
-import com.github.ksewen.ganyu.generate.domain.Role;
+import com.github.ksewen.ganyu.domain.Role;
 
 import java.util.List;
 
@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface RoleService {
 
-    List<Role> selectByName(String name);
+    List<Role> findByUserId(Long userId);
+
+    Role findFirstByName(String name);
 
 }

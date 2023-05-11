@@ -1,19 +1,20 @@
 package com.github.ksewen.ganyu.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
+import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.enums.ResultCode;
-import com.github.ksewen.ganyu.generate.domain.Role;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.AuthService;
 import com.github.ksewen.ganyu.service.RoleService;
 import com.github.ksewen.ganyu.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.util.StringUtils;
 
 /**
  * @author ksewen
@@ -35,16 +36,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean register(UserRegisterModel registerModel) {
-        List<Role> records = this.roleService.selectByName(this.USER_ROLE_NAME);
-        if (CollectionUtils.isEmpty(records)) {
+        Role exist = this.roleService.findFirstByName(this.USER_ROLE_NAME);
+        if (exist == null) {
             throw new CommonException(ResultCode.NOT_FOUND);
         }
-        if (records.size() > 1) {
-            throw new CommonException(ResultCode.DUPLICATE_RECORD);
-        }
         registerModel.setPassword(this.passwordEncoder.encode(registerModel.getPassword()));
-        List<Integer> roles = new ArrayList<>();
-        roles.add(records.get(0).getId());
+        if (!StringUtils.hasLength(registerModel.getNickname())) {
+            registerModel.setNickname(registerModel.getUsername());
+        }
+        List<Role> roles = new ArrayList<>();
+        roles.add(exist);
         return this.userService.createUser(registerModel, roles);
     }
 

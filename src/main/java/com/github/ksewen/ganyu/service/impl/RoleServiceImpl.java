@@ -1,12 +1,11 @@
 package com.github.ksewen.ganyu.service.impl;
 
-import com.github.ksewen.ganyu.generate.domain.Role;
-import com.github.ksewen.ganyu.generate.domain.RoleExample;
-import com.github.ksewen.ganyu.generate.mapper.RoleMapper;
-import com.github.ksewen.ganyu.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+
+import com.github.ksewen.ganyu.domain.Role;
+import com.github.ksewen.ganyu.mapper.RoleMapper;
+import com.github.ksewen.ganyu.service.RoleService;
 
 import java.util.List;
 
@@ -21,10 +20,12 @@ public class RoleServiceImpl implements RoleService {
     private RoleMapper roleMapper;
 
     @Override
-    public List<Role> selectByName(String name) {
-        RoleExample example = new RoleExample();
-        example.createCriteria().andNameEqualTo(name);
-        List<Role> roles = this.roleMapper.selectByExample(example);
-        return roles;
+    public List<Role> findByUserId(Long userId) {
+        return null;
+    }
+
+    @Override
+    public Role findFirstByName(String name) {
+        return this.roleMapper.findFirstByName(name);
     }
 }

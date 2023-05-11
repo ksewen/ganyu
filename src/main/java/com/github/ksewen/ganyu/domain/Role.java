@@ -1,0 +1,61 @@
+package com.github.ksewen.ganyu.domain;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.Date;
+
+/**
+ * @author ksewen
+ * @date 11.05.2023 07:42
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@Entity
+@Table(name = "role")
+@EntityListeners(value = AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE role SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
+public class Role {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(64)")
+    private String name;
+
+    @Column(columnDefinition = "DATETIME")
+    @CreationTimestamp
+    private Date createTime;
+
+    @Column(columnDefinition = "VARCHAR(64)")
+    @CreatedBy
+    private String createBy;
+
+    @Column(columnDefinition = "DATETIME")
+    @UpdateTimestamp
+    private Date modifyTime;
+
+    @Column(columnDefinition = "VARCHAR(64)")
+    @LastModifiedBy
+    private String modifyBy;
+
+    @Column(columnDefinition = "TINYINT(1)")
+    private Boolean deleted = Boolean.FALSE;
+
+}

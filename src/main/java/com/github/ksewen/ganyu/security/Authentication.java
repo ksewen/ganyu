@@ -2,7 +2,8 @@ package com.github.ksewen.ganyu.security;
 
 public interface Authentication {
 
-    Integer getUserId();
+    Long getUserId();
 
     String getUsername();
+
 }

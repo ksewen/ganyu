@@ -19,7 +19,6 @@ public class RegisterRequest extends LoginRequest {
     @NotBlank(message = "{auth.username.null}")
     private String username;
 
-    @NotBlank(message = "{auth.nickname.null}")
     private String nickname;
 
     private String mobile;

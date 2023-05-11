@@ -1,6 +1,7 @@
 package com.github.ksewen.ganyu.service;
 
-import com.github.ksewen.ganyu.domain.UserDomain;
+import com.github.ksewen.ganyu.domain.Role;
+import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 public interface UserService {
 
-    boolean createUser(UserRegisterModel userRegisterModel, List<Integer> roles);
+    User findFirstByUsername(String username);
+    boolean createUser(UserRegisterModel userRegisterModel, List<Role> roles);
 
 }

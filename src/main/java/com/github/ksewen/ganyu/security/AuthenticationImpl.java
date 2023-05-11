@@ -13,7 +13,7 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public Integer getUserId() {
+    public Long getUserId() {
         return getUserDetails().getId();
     }
 
