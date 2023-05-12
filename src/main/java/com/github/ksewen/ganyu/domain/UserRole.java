@@ -1,18 +1,17 @@
 package com.github.ksewen.ganyu.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
+import java.util.Date;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Date;
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
  * @author ksewen
@@ -58,7 +57,8 @@ public class UserRole {
     @LastModifiedBy
     private String modifyBy;
 
-    @Column(columnDefinition = "TINYINT(1)")
+    @Column(columnDefinition = "TINYINT(1) default 0", nullable = false)
+    @Builder.Default
     private Boolean deleted = Boolean.FALSE;
 
 }

@@ -1,6 +1,7 @@
 package com.github.ksewen.ganyu.domain;
 
 import com.github.ksewen.ganyu.enums.TokenType;
+
 import jakarta.persistence.*;
 import lombok.*;
 

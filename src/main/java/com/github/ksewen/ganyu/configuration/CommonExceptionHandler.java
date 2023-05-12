@@ -41,7 +41,6 @@ public class CommonExceptionHandler {
     @ResponseBody
     @SuppressWarnings({ "rawtypes" })
     public Result handleCommonException(Exception exception) {
-        log.info("internal server error", exception);
         return Result.systemError();
     }
 

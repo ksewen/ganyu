@@ -5,7 +5,7 @@ import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.model.AuthModel;
 import com.github.ksewen.ganyu.service.RoleService;
 import com.github.ksewen.ganyu.service.UserService;
-import com.github.ksewen.ganyu.util.BeanMapperUtil;
+import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +23,9 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private BeanMapperHelpers beanMapperHelpers;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = this.userService.findFirstByUsername(username);
@@ -30,7 +33,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
             //FIXME: access database twice
-            AuthModel authModel = BeanMapperUtil.createAndCopyProperties(user, AuthModel.class);
+            AuthModel authModel = this.beanMapperHelpers.createAndCopyProperties(user, AuthModel.class);
             List<Role> userRoles = this.roleService.findByUserId(authModel.getId());
             authModel.setRoles(userRoles);
             return JwtUserFactory.create(authModel);

@@ -1,14 +1,12 @@
 package com.github.ksewen.ganyu.controller;
 
+import com.github.ksewen.ganyu.annotation.LogTrace;
 import com.github.ksewen.ganyu.dto.auth.LoginRequest;
 import com.github.ksewen.ganyu.dto.auth.RegisterRequest;
 import com.github.ksewen.ganyu.dto.base.Result;
 import com.github.ksewen.ganyu.service.AuthService;
-import com.github.ksewen.ganyu.util.BeanMapperUtil;
+import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +28,14 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private BeanMapperHelpers beanMapperHelpers;
+
     @Operation(summary = "注册用户")
     @PostMapping("/register")
+    @LogTrace("register")
     public Result<Boolean> register(@Valid @RequestBody RegisterRequest request) {
-        UserRegisterModel userRegisterModel = BeanMapperUtil
+        UserRegisterModel userRegisterModel = this.beanMapperHelpers
                 .createAndCopyProperties(request, UserRegisterModel.class);
         return Result.success(this.authService.register(userRegisterModel));
     }

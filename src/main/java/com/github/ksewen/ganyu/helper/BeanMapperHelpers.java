@@ -1,4 +1,4 @@
-package com.github.ksewen.ganyu.util;
+package com.github.ksewen.ganyu.helper;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.enums.ResultCode;
@@ -14,8 +14,8 @@ import java.lang.reflect.InvocationTargetException;
  * @create: 2018-03-19 16:16
  **/
 @Slf4j
-public class BeanMapperUtil {
-    public static <T> T createAndCopyProperties(Object source, Class<T> clazz) {
+public class BeanMapperHelpers {
+    public <T> T createAndCopyProperties(Object source, Class<T> clazz) {
         try {
             T dest = clazz.getDeclaredConstructor().newInstance();
             BeanUtils.copyProperties(source, dest);
