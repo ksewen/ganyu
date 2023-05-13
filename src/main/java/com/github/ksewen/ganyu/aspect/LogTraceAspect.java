@@ -1,11 +1,14 @@
 package com.github.ksewen.ganyu.aspect;
 
+import com.github.ksewen.ganyu.dto.BaseRequest;
+import com.github.ksewen.ganyu.helper.JacksonHelpers;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.github.ksewen.ganyu.annotation.LogTrace;
+import com.github.ksewen.ganyu.annotation.LoggerNotTrace;
 import com.github.ksewen.ganyu.environment.SystemInformation;
 import com.github.ksewen.ganyu.helper.MDCHelpers;
 
@@ -17,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Aspect
-@Component
 public class LogTraceAspect {
 
     @Autowired
@@ -26,33 +28,53 @@ public class LogTraceAspect {
     @Autowired
     private SystemInformation systemInformation;
 
-    @Pointcut("@annotation(com.github.ksewen.ganyu.annotation.LogTrace)")
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private JacksonHelpers jacksonHelpers;
+
+    @Pointcut("this(com.github.ksewen.ganyu.controller.LoggingController) "
+            + "&& !@annotation(com.github.ksewen.ganyu.annotation.LoggerNotTrace))")
     public void pointCut() {
     }
 
-    @Before("pointCut() && @annotation(logTrace)")
-    public void doBefore(JoinPoint joinpoint, LogTrace logTrace) {
+    @Before("pointCut()")
+    public void doBefore(JoinPoint joinPoint) {
         boolean state = this.mdcHelpers.alreadyFinish();
         if (!state) {
             this.mdcHelpers.init();
         }
-        log.info("{} start: {}", this.systemInformation.getApplicationName(), logTrace.value());
+        log.info("{} start: {}, with arguments: {}", this.systemInformation.getApplicationName(),
+                request.getRequestURI(), this.jacksonHelpers.toJsonNode(this.getParameter(joinPoint)));
     }
 
-    @AfterThrowing(value = "pointCut() && @annotation(logTrace)", throwing = "exception")
-    public void doAfterThrowingAdvice(JoinPoint joinPoint, LogTrace logTrace, Throwable exception) {
-        log.info("{} throw a exception: {}", this.systemInformation.getApplicationName(), logTrace.value(), exception);
+    @AfterThrowing(value = "pointCut()", throwing = "exception")
+    public void doAfterThrowingAdvice(JoinPoint joinPoint, Throwable exception) {
+        log.info("{} throw a exception: {}, with arguments: {}", this.systemInformation.getApplicationName(),
+                request.getRequestURI(), this.jacksonHelpers.toJsonNode(this.getParameter(joinPoint)), exception);
         this.mdcHelpers.close();
     }
 
-    @AfterReturning(value = "pointCut() && @annotation(logTrace)", returning = "result")
-    public void doAfterReturningAdvice(JoinPoint joinPoint, LogTrace logTrace, Object result) {
-        log.info("{} finish: {}", logTrace.value());
+    @AfterReturning(value = "pointCut()", returning = "result")
+    public void doAfterReturningAdvice(JoinPoint joinPoint, Object result) {
+        log.info("{} finish: {}, with arguments: {}", request.getRequestURI(),
+                this.jacksonHelpers.toJsonNode(this.getParameter(joinPoint)));
         this.mdcHelpers.close();
     }
 
     @After("pointCut()")
     public void doAfter(JoinPoint joinpoint) {
 
+    }
+
+    private String getParameter(JoinPoint joinpoint) {
+        Object[] args = joinpoint.getArgs();
+        for (Object arg : args) {
+            if (arg instanceof BaseRequest) {
+                return this.jacksonHelpers.toJsonString(arg);
+            }
+        }
+        return "no argument";
     }
 }

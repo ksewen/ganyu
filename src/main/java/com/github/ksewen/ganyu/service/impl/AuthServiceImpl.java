@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     public boolean register(UserRegisterModel registerModel) {
         Role exist = this.roleService.findFirstByName(this.USER_ROLE_NAME);
         if (exist == null) {
-            throw new CommonException(ResultCode.NOT_FOUND);
+            throw new CommonException(ResultCode.NOT_FOUND, "user with given information ist already exist");
         }
         registerModel.setPassword(this.passwordEncoder.encode(registerModel.getPassword()));
         if (!StringUtils.hasLength(registerModel.getNickname())) {

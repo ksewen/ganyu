@@ -1,5 +1,6 @@
 package com.github.ksewen.ganyu.dto.auth;
 
+import com.github.ksewen.ganyu.dto.BaseRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @ToString
-public class LoginRequest {
+public class LoginRequest implements BaseRequest {
 
     @NotBlank(message = "{auth.email.null}")
     private String email;

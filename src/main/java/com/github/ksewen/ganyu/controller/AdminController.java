@@ -1,8 +1,9 @@
 package com.github.ksewen.ganyu.controller;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 /**
  * @author ksewen
@@ -11,5 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin")
 @SecurityRequirement(name = "jwt-auth")
-public class AdminController {
+public class AdminController implements LoggingController {
+
+    private final String NAME = "administrator";
+    @Override
+    public String name() {
+        return this.NAME;
+    }
 }

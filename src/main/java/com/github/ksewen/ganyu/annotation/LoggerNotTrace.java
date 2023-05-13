@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LogTrace {
+public @interface LoggerNotTrace {
 
     String value() default "";
 }

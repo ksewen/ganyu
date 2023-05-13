@@ -20,6 +20,7 @@ public enum ResultCode {
     NOT_FOUND(40004, "can not find the record"),
     SYSTEM_ERROR(50000, "system error"),
     COPY_PROPERTIES_ERROR(50001, "copy properties failed"),
+    SERIALIZATION_OR_DESERIALIZATION_ERROR(50002, "serialization or deserialization failed"),
     OPERATION_FAILED(50001, "operation failed");
 
     private int code;

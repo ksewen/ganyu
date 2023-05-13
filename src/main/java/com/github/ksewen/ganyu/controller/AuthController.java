@@ -1,6 +1,6 @@
 package com.github.ksewen.ganyu.controller;
 
-import com.github.ksewen.ganyu.annotation.LogTrace;
+import com.github.ksewen.ganyu.annotation.LoggerNotTrace;
 import com.github.ksewen.ganyu.dto.auth.LoginRequest;
 import com.github.ksewen.ganyu.dto.auth.RegisterRequest;
 import com.github.ksewen.ganyu.dto.base.Result;
@@ -23,7 +23,9 @@ import jakarta.validation.Valid;
  */
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController implements LoggingController {
+
+    private final String NAME = "authentication";
 
     @Autowired
     private AuthService authService;
@@ -33,7 +35,6 @@ public class AuthController {
 
     @Operation(summary = "注册用户")
     @PostMapping("/register")
-    @LogTrace("register")
     public Result<Boolean> register(@Valid @RequestBody RegisterRequest request) {
         UserRegisterModel userRegisterModel = this.beanMapperHelpers
                 .createAndCopyProperties(request, UserRegisterModel.class);
@@ -45,5 +46,10 @@ public class AuthController {
     public Result<Boolean> login(@Valid @RequestBody LoginRequest request) {
         String login = authService.login(request.getEmail(), request.getPassword());
         return Result.success(login);
+    }
+
+    @Override
+    public String name() {
+        return this.NAME;
     }
 }

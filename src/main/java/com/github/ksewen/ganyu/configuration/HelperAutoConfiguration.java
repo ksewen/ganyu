@@ -1,5 +1,7 @@
 package com.github.ksewen.ganyu.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.ksewen.ganyu.helper.JacksonHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,5 +31,10 @@ public class HelperAutoConfiguration {
     @Bean
     public MDCHelpers mdcHelpers(@Autowired SystemInformation systemInformation, @Autowired UUIDHelpers uuidHelpers) {
         return new MDCHelpers(systemInformation, uuidHelpers);
+    }
+
+    @Bean
+    public JacksonHelpers jacksonHelpers(@Autowired ObjectMapper objectMapper) {
+        return new JacksonHelpers(objectMapper);
     }
 }
