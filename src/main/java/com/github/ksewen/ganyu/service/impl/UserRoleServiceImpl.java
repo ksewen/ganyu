@@ -2,22 +2,23 @@ package com.github.ksewen.ganyu.service.impl;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.ksewen.ganyu.domain.UserRole;
 import com.github.ksewen.ganyu.mapper.UserRoleMapper;
 import com.github.ksewen.ganyu.service.UserRoleService;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author ksewen
  * @date 11.05.2023 00:20
  */
 @Service
+@RequiredArgsConstructor
 public class UserRoleServiceImpl implements UserRoleService {
 
-    @Autowired
-    private UserRoleMapper userRoleMapper;
+    private final UserRoleMapper userRoleMapper;
 
     @Override
     public List<UserRole> findByUserId(Long userId) {

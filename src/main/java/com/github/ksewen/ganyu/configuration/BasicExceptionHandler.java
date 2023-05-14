@@ -1,6 +1,7 @@
 package com.github.ksewen.ganyu.configuration;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -48,6 +49,13 @@ public class BasicExceptionHandler {
         ResultCode code = exception.getCode();
         return code != null ? Result.builder().code(code.getCode()).message(exception.getMessage()).build()
                 : Result.systemError();
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public Result handleBadCredentialsException(BadCredentialsException exception) {
+        return Result.builder().code(ResultCode.UNAUTHORIZED.getCode()).message(exception.getMessage()).build();
     }
 
     @ExceptionHandler(value = Exception.class)

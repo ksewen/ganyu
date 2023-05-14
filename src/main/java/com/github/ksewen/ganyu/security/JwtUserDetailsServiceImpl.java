@@ -31,7 +31,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = this.userService.findFirstByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+            throw new UsernameNotFoundException(String.format("none user found with username '%s'.", username));
         } else {
             //FIXME: access database twice
             AuthModel authModel = this.beanMapperHelpers.createAndCopyProperties(user, AuthModel.class);

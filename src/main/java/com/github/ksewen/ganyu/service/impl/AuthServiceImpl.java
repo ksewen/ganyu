@@ -3,39 +3,53 @@ package com.github.ksewen.ganyu.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.Role;
+import com.github.ksewen.ganyu.domain.Token;
+import com.github.ksewen.ganyu.domain.User;
+import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
 import com.github.ksewen.ganyu.enums.ResultCode;
+import com.github.ksewen.ganyu.model.JwtUserModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
-import com.github.ksewen.ganyu.service.AuthService;
-import com.github.ksewen.ganyu.service.RoleService;
-import com.github.ksewen.ganyu.service.UserService;
+import com.github.ksewen.ganyu.service.*;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author ksewen
  * @date 10.05.2023 16:07
  */
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
+    private final TokenService tokenService;
+
+    private final UserDetailsService userDetailsService;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final PasswordEncoder passwordEncoder;
 
     private final String USER_ROLE_NAME = "USER";
 
     @Override
-    public boolean register(UserRegisterModel registerModel) {
+    public User register(UserRegisterModel registerModel) {
         Role exist = this.roleService.findFirstByName(this.USER_ROLE_NAME);
         if (exist == null) {
             throw new CommonException(ResultCode.NOT_FOUND, "user with given information ist already exist");
@@ -50,13 +64,17 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(String email, String password) {
-        return null;
-    }
+    public JwtTokenResponse login(String username, String password) {
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
+        final Authentication authentication = this.authenticationManager.authenticate(upToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    @Override
-    public String refresh(String oldToken) {
-        return null;
+        final JwtUserModel userDetails = (JwtUserModel) this.userDetailsService.loadUserByUsername(username);
+        final String token = this.jwtService.generateToken(userDetails);
+        final String refreshToken = this.jwtService.generateRefreshToken(userDetails);
+        this.tokenService.removeAllUserTokens(userDetails.getId());
+        Token save = this.tokenService.save(userDetails.getId(), token);
+        return JwtTokenResponse.builder().id(save.getId()).token(save.getToken()).refreshToken(refreshToken).build();
     }
 
 }

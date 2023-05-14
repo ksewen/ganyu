@@ -30,6 +30,11 @@ import lombok.*;
 @Where(clause = "deleted = false")
 public class Role {
 
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)

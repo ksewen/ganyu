@@ -13,6 +13,6 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
 public interface UserService {
 
     User findFirstByUsername(String username);
-    boolean createUser(UserRegisterModel userRegisterModel, List<Role> roles);
+    User createUser(UserRegisterModel userRegisterModel, List<Role> roles);
 
 }

@@ -1,10 +1,10 @@
 package com.github.ksewen.ganyu.configuration.properties;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author ksewen

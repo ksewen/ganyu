@@ -15,7 +15,7 @@ import com.github.ksewen.ganyu.domain.Role;
 @Repository
 public interface RoleMapper extends JpaRepository<Role, Long> {
 
-    @Query("SELECT r.id, r.name FROM Role r WHERE r.id in (SELECT ur.roleId FROM UserRole ur WHERE ur.userId = ?1)")
+    @Query("SELECT new Role(r.id, r.name) FROM Role r WHERE r.id in (SELECT ur.roleId FROM UserRole ur WHERE ur.userId = ?1)")
     List<Role> findByUserId(Long userId);
 
     Role findFirstByName(String name);

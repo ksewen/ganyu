@@ -1,20 +1,23 @@
 package com.github.ksewen.ganyu.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.ksewen.ganyu.domain.User;
+import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
 import com.github.ksewen.ganyu.dto.auth.LoginRequest;
 import com.github.ksewen.ganyu.dto.auth.RegisterRequest;
 import com.github.ksewen.ganyu.dto.base.Result;
+import com.github.ksewen.ganyu.dto.user.UserInfoResponse;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author ksewen
@@ -22,29 +25,29 @@ import jakarta.validation.Valid;
  */
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController implements LoggingController {
 
     private final String NAME = "authentication";
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
-    @Autowired
-    private BeanMapperHelpers beanMapperHelpers;
+    private final BeanMapperHelpers beanMapperHelpers;
 
     @Operation(summary = "注册用户")
     @PostMapping("/register")
-    public Result<Boolean> register(@Valid @RequestBody RegisterRequest request) {
-        UserRegisterModel userRegisterModel = this.beanMapperHelpers
-                .createAndCopyProperties(request, UserRegisterModel.class);
-        return Result.success(this.authService.register(userRegisterModel));
+    public Result<UserInfoResponse> register(@Valid @RequestBody RegisterRequest request) {
+        UserRegisterModel userRegisterModel = this.beanMapperHelpers.createAndCopyProperties(request,
+                UserRegisterModel.class);
+        User user = this.authService.register(userRegisterModel);
+        return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
     }
 
     @Operation(summary = "登录")
     @PostMapping("/login")
-    public Result<Boolean> login(@Valid @RequestBody LoginRequest request) {
-        String login = authService.login(request.getEmail(), request.getPassword());
-        return Result.success(login);
+    public Result<JwtTokenResponse> login(@Valid @RequestBody LoginRequest request) {
+        JwtTokenResponse token = this.authService.login(request.getEmail(), request.getPassword());
+        return Result.success(token);
     }
 
     @Override

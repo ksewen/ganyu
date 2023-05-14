@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author ksewen
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @RequestMapping("/admin")
 @SecurityRequirement(name = "jwt-auth")
+@RequiredArgsConstructor
 public class AdminController implements LoggingController {
 
     private final String NAME = "administrator";

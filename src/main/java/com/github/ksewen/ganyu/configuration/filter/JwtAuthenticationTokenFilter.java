@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.github.ksewen.ganyu.configuration.properties.JwtProperties;
 import com.github.ksewen.ganyu.service.JwtService;
+import com.github.ksewen.ganyu.service.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,6 +39,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private JwtProperties jwtProperties;
 
     @Override
@@ -53,7 +57,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if (this.jwtService.validateToken(token, userDetails)) {
+                boolean isTokenValid = this.tokenService.findByToken(token).map(t -> !t.getExpired() && !t.getExpired())
+                        .orElse(false);
+                if (isTokenValid && this.jwtService.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

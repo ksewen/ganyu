@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,18 +18,19 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.UserRoleService;
 import com.github.ksewen.ganyu.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * @author ksewen
  * @date 10.05.2023 23:54
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    @Autowired
-    private UserRoleService userRoleService;
+    private final UserRoleService userRoleService;
 
     @Override
     public User findFirstByUsername(String username) {
@@ -39,17 +39,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean createUser(UserRegisterModel userRegisterModel, List<Role> roles) {
+    public User createUser(UserRegisterModel userRegisterModel, List<Role> roles) {
         UserSpecification specification = new UserSpecification(null, userRegisterModel.getUsername(), null,
                 userRegisterModel.getEmail(), userRegisterModel.getMobile(), false);
-        Optional<User> result = this.userMapper.findOne(specification);
-        if (result.isPresent()) {
+        Optional<User> exist = this.userMapper.findOne(specification);
+        if (exist.isPresent()) {
             throw new CommonException(ResultCode.ALREADY_EXIST);
         }
         User user = User.builder().username(userRegisterModel.getUsername()).email(userRegisterModel.getEmail())
                 .nickname(userRegisterModel.getNickname()).password(userRegisterModel.getPassword())
                 .mobile(userRegisterModel.getMobile()).avatarUrl(userRegisterModel.getAvatarUrl()).build();
-        this.userMapper.saveAndFlush(user);
+        User result = this.userMapper.saveAndFlush(user);
 
         List<UserRole> userRoles = new ArrayList<>();
         for (Role role : roles) {
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
             userRoles.add(userRole);
         }
         this.userRoleService.saveAllAndFlush(userRoles);
-        return true;
+        return result;
     }
 
 }

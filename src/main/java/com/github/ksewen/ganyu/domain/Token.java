@@ -32,12 +32,15 @@ public class Token {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(64)")
+    @Builder.Default
     private TokenType tokenType = TokenType.BEARER;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Builder.Default
     private Boolean revoked = Boolean.FALSE;;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Builder.Default
     private Boolean expired = Boolean.FALSE;;
 
 
