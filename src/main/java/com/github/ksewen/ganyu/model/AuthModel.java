@@ -1,13 +1,10 @@
 package com.github.ksewen.ganyu.model;
 
-import com.github.ksewen.ganyu.domain.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
-
 import java.util.List;
+
+import com.github.ksewen.ganyu.domain.Role;
+
+import lombok.*;
 
 /**
  * @author ksewen

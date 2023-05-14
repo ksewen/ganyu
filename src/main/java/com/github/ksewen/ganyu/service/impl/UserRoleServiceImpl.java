@@ -1,13 +1,13 @@
 package com.github.ksewen.ganyu.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.ksewen.ganyu.domain.UserRole;
 import com.github.ksewen.ganyu.mapper.UserRoleMapper;
 import com.github.ksewen.ganyu.service.UserRoleService;
-
-import java.util.List;
 
 /**
  * @author ksewen

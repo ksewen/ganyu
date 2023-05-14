@@ -3,11 +3,10 @@ package com.github.ksewen.ganyu.security;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.model.AuthModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.github.ksewen.ganyu.model.AuthModel;
 import com.github.ksewen.ganyu.model.JwtUserModel;
 
 public final class JwtUserFactory {

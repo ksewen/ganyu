@@ -1,8 +1,8 @@
 package com.github.ksewen.ganyu.service;
 
-import com.github.ksewen.ganyu.domain.Role;
-
 import java.util.List;
+
+import com.github.ksewen.ganyu.domain.Role;
 
 /**
  * @author ksewen

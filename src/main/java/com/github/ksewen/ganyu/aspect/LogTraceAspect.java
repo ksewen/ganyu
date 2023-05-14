@@ -1,17 +1,14 @@
 package com.github.ksewen.ganyu.aspect;
 
-import com.github.ksewen.ganyu.dto.BaseRequest;
-import com.github.ksewen.ganyu.helper.JacksonHelpers;
-import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import com.github.ksewen.ganyu.annotation.LoggerNotTrace;
 import com.github.ksewen.ganyu.environment.SystemInformation;
+import com.github.ksewen.ganyu.helper.JacksonHelpers;
 import com.github.ksewen.ganyu.helper.MDCHelpers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,35 +43,25 @@ public class LogTraceAspect {
             this.mdcHelpers.init();
         }
         log.info("{} start: {}, with arguments: {}", this.systemInformation.getApplicationName(),
-                request.getRequestURI(), this.jacksonHelpers.toJsonNode(this.getParameter(joinPoint)));
+                request.getRequestURI(), this.jacksonHelpers.toJsonNode(joinPoint.getArgs()));
     }
 
     @AfterThrowing(value = "pointCut()", throwing = "exception")
     public void doAfterThrowingAdvice(JoinPoint joinPoint, Throwable exception) {
         log.info("{} throw a exception: {}, with arguments: {}", this.systemInformation.getApplicationName(),
-                request.getRequestURI(), this.jacksonHelpers.toJsonNode(this.getParameter(joinPoint)), exception);
+                request.getRequestURI(), this.jacksonHelpers.toJsonNode(joinPoint.getArgs()), exception);
         this.mdcHelpers.close();
     }
 
     @AfterReturning(value = "pointCut()", returning = "result")
     public void doAfterReturningAdvice(JoinPoint joinPoint, Object result) {
         log.info("{} finish: {}, with arguments: {}", request.getRequestURI(),
-                this.jacksonHelpers.toJsonNode(this.getParameter(joinPoint)));
+                this.jacksonHelpers.toJsonNode(joinPoint.getArgs()));
         this.mdcHelpers.close();
     }
 
     @After("pointCut()")
     public void doAfter(JoinPoint joinpoint) {
 
-    }
-
-    private String getParameter(JoinPoint joinpoint) {
-        Object[] args = joinpoint.getArgs();
-        for (Object arg : args) {
-            if (arg instanceof BaseRequest) {
-                return this.jacksonHelpers.toJsonString(arg);
-            }
-        }
-        return "no argument";
     }
 }

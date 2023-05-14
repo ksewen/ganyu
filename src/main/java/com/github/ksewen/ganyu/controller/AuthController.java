@@ -1,18 +1,17 @@
 package com.github.ksewen.ganyu.controller;
 
-import com.github.ksewen.ganyu.annotation.LoggerNotTrace;
-import com.github.ksewen.ganyu.dto.auth.LoginRequest;
-import com.github.ksewen.ganyu.dto.auth.RegisterRequest;
-import com.github.ksewen.ganyu.dto.base.Result;
-import com.github.ksewen.ganyu.service.AuthService;
-import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.ksewen.ganyu.dto.auth.LoginRequest;
+import com.github.ksewen.ganyu.dto.auth.RegisterRequest;
+import com.github.ksewen.ganyu.dto.base.Result;
+import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
+import com.github.ksewen.ganyu.service.AuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

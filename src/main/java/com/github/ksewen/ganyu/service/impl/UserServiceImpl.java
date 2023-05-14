@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.ksewen.ganyu.mapper.specification.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.domain.UserRole;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.mapper.UserMapper;
+import com.github.ksewen.ganyu.mapper.specification.UserSpecification;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.UserRoleService;
 import com.github.ksewen.ganyu.service.UserService;

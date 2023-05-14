@@ -1,8 +1,8 @@
 package com.github.ksewen.ganyu.helper;
 
-import org.springframework.util.StringUtils;
-
 import java.util.UUID;
+
+import org.springframework.util.StringUtils;
 
 /**
  * @author ksewen

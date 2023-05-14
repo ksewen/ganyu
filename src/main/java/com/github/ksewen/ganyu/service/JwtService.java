@@ -1,11 +1,11 @@
 package com.github.ksewen.ganyu.service;
 
-import io.jsonwebtoken.Claims;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.springframework.security.core.userdetails.UserDetails;
+
+import io.jsonwebtoken.Claims;
 
 /**
  * @author ksewen

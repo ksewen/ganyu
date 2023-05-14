@@ -1,7 +1,11 @@
 package com.github.ksewen.ganyu.dto.base;
 
 import com.github.ksewen.ganyu.enums.ResultCode;
-import lombok.*;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author ksewen
@@ -16,7 +20,8 @@ public class Result<T> {
     private int code;
     private String message;
 
-    private boolean success = false;
+    @Builder.Default
+    private boolean success = Boolean.FALSE;
     private T data;
 
     public Result() {

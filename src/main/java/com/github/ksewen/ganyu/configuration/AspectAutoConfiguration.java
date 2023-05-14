@@ -1,8 +1,9 @@
 package com.github.ksewen.ganyu.configuration;
 
-import com.github.ksewen.ganyu.aspect.LogTraceAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.github.ksewen.ganyu.aspect.LogTraceAspect;
 
 /**
  * @author ksewen

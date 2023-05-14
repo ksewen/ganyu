@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * @author ksewen

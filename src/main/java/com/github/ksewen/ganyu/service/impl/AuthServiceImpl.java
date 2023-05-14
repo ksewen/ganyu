@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.Role;
@@ -14,7 +15,6 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.AuthService;
 import com.github.ksewen.ganyu.service.RoleService;
 import com.github.ksewen.ganyu.service.UserService;
-import org.springframework.util.StringUtils;
 
 /**
  * @author ksewen

@@ -1,8 +1,9 @@
 package com.github.ksewen.ganyu.helper;
 
-import com.github.ksewen.ganyu.environment.SystemInformation;
 import org.slf4j.MDC;
 import org.springframework.util.StringUtils;
+
+import com.github.ksewen.ganyu.environment.SystemInformation;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
