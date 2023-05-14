@@ -3,6 +3,7 @@ package com.github.ksewen.ganyu.service;
 import java.util.Optional;
 
 import com.github.ksewen.ganyu.domain.Token;
+import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
 
 /**
  * @author ksewen
@@ -14,7 +15,7 @@ public interface TokenService {
 
     Token save(Long userId, String token);
 
-    String refresh(String oldToken);
+    JwtTokenResponse refresh(String refreshToken);
 
     Optional<Token> findByToken(String token);
 

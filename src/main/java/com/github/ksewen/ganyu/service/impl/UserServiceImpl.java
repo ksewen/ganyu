@@ -33,8 +33,8 @@ public class UserServiceImpl implements UserService {
     private final UserRoleService userRoleService;
 
     @Override
-    public User findFirstByUsername(String username) {
-        return this.userMapper.findFirstByUsername(username);
+    public Optional<User> findByUsername(String username) {
+        return this.userMapper.findByUsername(username);
     }
 
     @Override

@@ -41,6 +41,13 @@ public class BasicExceptionHandler {
         return Result.paramInvalid(bindingResult.getFieldError().getDefaultMessage());
     }
 
+    @ExceptionHandler(value = BadCredentialsException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public Result handleBadCredentialsException(BadCredentialsException exception) {
+        return Result.builder().code(ResultCode.UNAUTHORIZED.getCode()).message(exception.getMessage()).build();
+    }
+
     @ExceptionHandler(value = CommonException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
@@ -51,12 +58,6 @@ public class BasicExceptionHandler {
                 : Result.systemError();
     }
 
-    @ExceptionHandler(value = BadCredentialsException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ResponseBody
-    public Result handleBadCredentialsException(BadCredentialsException exception) {
-        return Result.builder().code(ResultCode.UNAUTHORIZED.getCode()).message(exception.getMessage()).build();
-    }
 
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)

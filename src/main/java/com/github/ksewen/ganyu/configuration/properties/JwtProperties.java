@@ -21,7 +21,7 @@ public class JwtProperties {
 
     private long expiration;
 
-    private long refreshExpiration;
+    private long refreshTokenExpiration;
 
     private String readHeader;
 

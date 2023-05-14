@@ -1,9 +1,6 @@
 package com.github.ksewen.ganyu.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
@@ -14,9 +11,11 @@ import com.github.ksewen.ganyu.dto.user.UserInfoResponse;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.AuthService;
+import com.github.ksewen.ganyu.service.TokenService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -32,9 +31,11 @@ public class AuthController implements LoggingController {
 
     private final AuthService authService;
 
+    private final TokenService tokenService;
+
     private final BeanMapperHelpers beanMapperHelpers;
 
-    @Operation(summary = "注册用户")
+    @Operation(summary = "register")
     @PostMapping("/register")
     public Result<UserInfoResponse> register(@Valid @RequestBody RegisterRequest request) {
         UserRegisterModel userRegisterModel = this.beanMapperHelpers.createAndCopyProperties(request,
@@ -43,10 +44,17 @@ public class AuthController implements LoggingController {
         return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
     }
 
-    @Operation(summary = "登录")
+    @Operation(summary = "login")
     @PostMapping("/login")
     public Result<JwtTokenResponse> login(@Valid @RequestBody LoginRequest request) {
         JwtTokenResponse token = this.authService.login(request.getEmail(), request.getPassword());
+        return Result.success(token);
+    }
+
+    @Operation(summary = "token-refresh")
+    @PostMapping("/token-refresh")
+    public Result<JwtTokenResponse> tokenRefresh(@RequestParam @NotBlank(message = "{auth.refresh.token.null}") String refreshToken) {
+        JwtTokenResponse token = this.tokenService.refresh(refreshToken);
         return Result.success(token);
     }
 

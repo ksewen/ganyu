@@ -53,7 +53,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, this.jwtProperties.getRefreshExpiration());
+        return buildToken(new HashMap<>(), userDetails, this.jwtProperties.getRefreshTokenExpiration());
     }
 
     @Override

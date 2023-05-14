@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.github.ksewen.ganyu.domain.Role;
-import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.model.AuthModel;
 import com.github.ksewen.ganyu.service.RoleService;
@@ -29,15 +28,12 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = this.userService.findFirstByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("none user found with username '%s'.", username));
-        } else {
-            //FIXME: access database twice
-            AuthModel authModel = this.beanMapperHelpers.createAndCopyProperties(user, AuthModel.class);
+        return this.userService.findByUsername(username).map(u -> {
+            AuthModel authModel = this.beanMapperHelpers.createAndCopyProperties(u, AuthModel.class);
             List<Role> userRoles = this.roleService.findByUserId(authModel.getId());
             authModel.setRoles(userRoles);
             return JwtUserFactory.create(authModel);
-        }
+        }).orElseThrow(
+                () -> new UsernameNotFoundException(String.format("none user found with username '%s'.", username)));
     }
 }

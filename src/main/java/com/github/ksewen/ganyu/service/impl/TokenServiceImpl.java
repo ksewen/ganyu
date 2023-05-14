@@ -5,10 +5,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.github.ksewen.ganyu.configuration.exception.InvalidParamException;
 import com.github.ksewen.ganyu.domain.Token;
+import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
 import com.github.ksewen.ganyu.mapper.TokenMapper;
+import com.github.ksewen.ganyu.model.JwtUserModel;
+import com.github.ksewen.ganyu.service.JwtService;
 import com.github.ksewen.ganyu.service.TokenService;
 
 import jakarta.persistence.criteria.Predicate;
@@ -22,7 +28,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
 
+    private final UserDetailsService userDetailsService;
+
     private final TokenMapper tokenMapper;
+
+    private final JwtService jwtService;
 
     @Override
     public void removeAllUserTokens(Long userId) {
@@ -53,8 +63,21 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public String refresh(String oldToken) {
-        return null;
+    public JwtTokenResponse refresh(String refreshToken) {
+        String username = this.jwtService.extractUsername(refreshToken);
+        if (StringUtils.hasLength(username)) {
+            final JwtUserModel user = (JwtUserModel) this.userDetailsService.loadUserByUsername(username);
+            if (user == null) {
+                new InvalidParamException("can't resolve the refresh_token");
+            }
+            if (this.jwtService.validateToken(refreshToken, user)) {
+                String accessToken = this.jwtService.generateToken(user);
+                this.removeAllUserTokens(user.getId());
+                Token save = save(user.getId(), accessToken);
+                return JwtTokenResponse.builder().id(save.getId()).token(accessToken).refreshToken(refreshToken).build();
+            }
+        }
+        throw new InvalidParamException("invalid refresh_token");
     }
 
     @Override
