@@ -1,11 +1,11 @@
 package com.github.ksewen.ganyu.security;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.github.ksewen.ganyu.model.JwtUserModel;
 
-@Component
+@Service
 public class AuthenticationImpl implements Authentication {
 
     private JwtUserModel getUserDetails(){

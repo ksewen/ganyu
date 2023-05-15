@@ -1,6 +1,5 @@
 package com.github.ksewen.ganyu.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +14,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.github.ksewen.ganyu.configuration.filter.JwtAuthenticationTokenFilter;
 import com.github.ksewen.ganyu.configuration.properties.JwtProperties;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author ksewen
@@ -28,17 +31,19 @@ import com.github.ksewen.ganyu.configuration.properties.JwtProperties;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 @ComponentScan("com.github.ksewen.ganyu.security")
 public class SecurityAutoConfiguration {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final JwtProperties jwtProperties;
+
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+
+    private final AccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -48,37 +53,21 @@ public class SecurityAutoConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder)
             throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder)
-                .and()
-                .build();
+        return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(this.userDetailsService)
+                .passwordEncoder(passwordEncoder).and().build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .cors().and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+        httpSecurity.cors().and().csrf().disable().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(
-                        HttpMethod.GET,
-                        "/",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/*/*.html",
-                        "/*/*.css",
-                        "/*/*.js",
-                        "/v3/api-docs/**",
-                        "/swagger-resources/**",
-                        "/webjars/**",
-                        "swagger-ui/**"
-                ).permitAll()
-                .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated();
+                .authorizeHttpRequests().requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/*/*.html", "/*/*.css", "/*/*.js",
+                        "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**", "swagger-ui/**")
+                .permitAll().requestMatchers("/auth/**").permitAll().anyRequest().authenticated().and()
+                .exceptionHandling().authenticationEntryPoint(this.authenticationEntryPoint)
+                .accessDeniedHandler(this.accessDeniedHandler);
 
         // 禁用缓存
         httpSecurity.headers().cacheControl();
@@ -90,10 +79,8 @@ public class SecurityAutoConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.debug(this.jwtProperties.isDebug())
-                .ignoring()
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico");
+        return (web) -> web.debug(this.jwtProperties.isDebug()).ignoring().requestMatchers("/css/**", "/js/**",
+                "/img/**", "/lib/**", "/favicon.ico");
     }
-
 
 }

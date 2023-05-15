@@ -1,5 +1,8 @@
 server:
   port: '38080'
+  error:
+    whitelabel:
+      enabled: false
 
 spring:
   application:
