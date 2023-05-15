@@ -35,12 +35,14 @@ public class AuthController implements LoggingController {
 
     private final BeanMapperHelpers beanMapperHelpers;
 
+    private final String USER_ROLE_NAME = "USER";
+
     @Operation(summary = "register")
     @PostMapping("/register")
     public Result<UserInfoResponse> register(@Valid @RequestBody RegisterRequest request) {
         UserRegisterModel userRegisterModel = this.beanMapperHelpers.createAndCopyProperties(request,
                 UserRegisterModel.class);
-        User user = this.authService.register(userRegisterModel);
+        User user = this.authService.register(userRegisterModel, this.USER_ROLE_NAME);
         return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
     }
 

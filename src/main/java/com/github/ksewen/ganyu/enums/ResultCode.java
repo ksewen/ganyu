@@ -18,6 +18,7 @@ public enum ResultCode {
     ALREADY_EXIST(40001, "the record ist already exist"),
     DUPLICATE_RECORD(40003,"find duplicate records"),
     UNAUTHORIZED(41000, "invalid username or password"),
+    ACCESS_DENIED(43000, "permission denied"),
     NOT_FOUND(44000, "can not find the record"),
     SYSTEM_ERROR(50000, "system error"),
     COPY_PROPERTIES_ERROR(50001, "copy properties failed"),

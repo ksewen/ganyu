@@ -14,6 +14,6 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
 public interface UserService {
 
     Optional<User> findByUsername(String username);
-    User createUser(UserRegisterModel userRegisterModel, List<Role> roles);
+    User add(UserRegisterModel userRegisterModel, List<Role> roles);
 
 }

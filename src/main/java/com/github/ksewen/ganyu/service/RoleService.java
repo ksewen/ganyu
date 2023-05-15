@@ -13,5 +13,6 @@ public interface RoleService {
     List<Role> findByUserId(Long userId);
 
     Role findFirstByName(String name);
+    List<Role> findByNames(String... name);
 
 }

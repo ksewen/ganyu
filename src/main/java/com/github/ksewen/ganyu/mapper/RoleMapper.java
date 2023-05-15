@@ -19,4 +19,6 @@ public interface RoleMapper extends JpaRepository<Role, Long> {
     List<Role> findByUserId(Long userId);
 
     Role findFirstByName(String name);
+
+    List<Role> findByNameIn(List<String> names);
 }

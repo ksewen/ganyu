@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User createUser(UserRegisterModel userRegisterModel, List<Role> roles) {
+    public User add(UserRegisterModel userRegisterModel, List<Role> roles) {
         UserSpecification specification = new UserSpecification(null, userRegisterModel.getUsername(), null,
                 userRegisterModel.getEmail(), userRegisterModel.getMobile(), false);
         Optional<User> exist = this.userMapper.findOne(specification);

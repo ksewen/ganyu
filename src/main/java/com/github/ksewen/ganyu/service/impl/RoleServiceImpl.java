@@ -1,5 +1,6 @@
 package com.github.ksewen.ganyu.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -26,5 +27,9 @@ public class RoleServiceImpl implements RoleService {
 
     public Role findFirstByName(String name) {
         return this.roleMapper.findFirstByName(name);
+    }
+
+    public List<Role> findByNames(String... name) {
+        return this.roleMapper.findByNameIn(Arrays.asList(name));
     }
 }

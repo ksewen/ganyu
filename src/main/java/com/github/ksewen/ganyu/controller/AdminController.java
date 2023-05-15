@@ -1,9 +1,21 @@
 package com.github.ksewen.ganyu.controller;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.ksewen.ganyu.domain.User;
+import com.github.ksewen.ganyu.dto.auth.RegisterRequest;
+import com.github.ksewen.ganyu.dto.base.Result;
+import com.github.ksewen.ganyu.dto.user.UserInfoResponse;
+import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
+import com.github.ksewen.ganyu.model.UserRegisterModel;
+import com.github.ksewen.ganyu.service.AdminService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -17,6 +29,20 @@ import lombok.RequiredArgsConstructor;
 public class AdminController implements LoggingController {
 
     private final String NAME = "administrator";
+
+    private final AdminService adminService;
+
+    private final BeanMapperHelpers beanMapperHelpers;
+
+    @Operation(summary = "add administrator")
+    @PostMapping("/add")
+    public Result<UserInfoResponse> add(@Valid @RequestBody RegisterRequest request) {
+        UserRegisterModel userRegisterModel = this.beanMapperHelpers.createAndCopyProperties(request,
+                UserRegisterModel.class);
+        User user = this.adminService.add(userRegisterModel);
+        return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
+    }
+
     @Override
     public String name() {
         return this.NAME;

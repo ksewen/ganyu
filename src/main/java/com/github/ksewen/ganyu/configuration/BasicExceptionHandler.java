@@ -27,7 +27,6 @@ public class BasicExceptionHandler {
     @ExceptionHandler(value = { MethodArgumentNotValidException.class, BindException.class })
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @SuppressWarnings({ "rawtypes" })
     public Result handleMethodArgumentNotValidException(Exception validException) {
         BindingResult bindingResult = null;
         if (validException instanceof MethodArgumentNotValidException) {
@@ -51,7 +50,6 @@ public class BasicExceptionHandler {
     @ExceptionHandler(value = CommonException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    @SuppressWarnings({ "rawtypes" })
     public Result handleCommonException(CommonException exception) {
         ResultCode code = exception.getCode();
         return code != null ? Result.builder().code(code.getCode()).message(exception.getMessage()).build()
@@ -62,7 +60,6 @@ public class BasicExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    @SuppressWarnings({ "rawtypes" })
     public Result handleCommonException(Exception exception) {
         return Result.systemError();
     }

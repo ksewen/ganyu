@@ -55,8 +55,8 @@ public class LogTraceAspect {
 
     @AfterReturning(value = "pointCut()", returning = "result")
     public void doAfterReturningAdvice(JoinPoint joinPoint, Object result) {
-        log.info("{} finish: {}, with arguments: {}", request.getRequestURI(),
-                this.jacksonHelpers.toJsonNode(joinPoint.getArgs()));
+        log.info("{} finish: {}, result: {}", this.systemInformation.getApplicationName(),
+                request.getRequestURI(), this.jacksonHelpers.toJsonNode(result));
         this.mdcHelpers.close();
     }
 
