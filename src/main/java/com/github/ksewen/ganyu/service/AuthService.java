@@ -1,7 +1,7 @@
 package com.github.ksewen.ganyu.service;
 
 import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
+import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 
 /**
@@ -10,7 +10,7 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
  */
 public interface AuthService {
 
-    User register (UserRegisterModel registerModel, String... roleNames);
+    User register (UserRegisterModel userRegisterModel, String... roleNames);
 
     JwtTokenResponse login(String username, String password);
 

@@ -1,4 +1,4 @@
-package com.github.ksewen.ganyu.dto.auth;
+package com.github.ksewen.ganyu.dto.response;
 
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.github.ksewen.ganyu.dto.base;
+package com.github.ksewen.ganyu.dto.response.base;
 
 import com.github.ksewen.ganyu.enums.ResultCode;
 

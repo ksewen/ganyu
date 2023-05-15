@@ -1,4 +1,4 @@
-package com.github.ksewen.ganyu.dto.auth;
+package com.github.ksewen.ganyu.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

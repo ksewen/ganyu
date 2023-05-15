@@ -2,12 +2,13 @@ package com.github.ksewen.ganyu.controller;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.github.ksewen.ganyu.configuration.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
-import com.github.ksewen.ganyu.dto.auth.LoginRequest;
-import com.github.ksewen.ganyu.dto.auth.RegisterRequest;
-import com.github.ksewen.ganyu.dto.base.Result;
-import com.github.ksewen.ganyu.dto.user.UserInfoResponse;
+import com.github.ksewen.ganyu.dto.request.LoginRequest;
+import com.github.ksewen.ganyu.dto.request.UserRegisterRequest;
+import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
+import com.github.ksewen.ganyu.dto.response.UserInfoResponse;
+import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.AuthService;
@@ -35,14 +36,12 @@ public class AuthController implements LoggingController {
 
     private final BeanMapperHelpers beanMapperHelpers;
 
-    private final String USER_ROLE_NAME = "USER";
-
     @Operation(summary = "register")
     @PostMapping("/register")
-    public Result<UserInfoResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public Result<UserInfoResponse> register(@Valid @RequestBody UserRegisterRequest request) {
         UserRegisterModel userRegisterModel = this.beanMapperHelpers.createAndCopyProperties(request,
                 UserRegisterModel.class);
-        User user = this.authService.register(userRegisterModel, this.USER_ROLE_NAME);
+        User user = this.authService.register(userRegisterModel, AuthenticationConstants.USER_ROLE_NAME);
         return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
     }
 

@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import com.github.ksewen.ganyu.dto.base.Result;
+import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.JacksonHelpers;
 

@@ -16,7 +16,7 @@ import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.Token;
 import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
+import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.model.JwtUserModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
@@ -47,16 +47,16 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User register(UserRegisterModel registerModel, String... roleNames) {
+    public User register(UserRegisterModel userRegisterModel, String... roleNames) {
         List<Role> roles = this.roleService.findByNames(roleNames);
         if (CollectionUtils.isEmpty(roles)) {
             throw new CommonException(ResultCode.NOT_FOUND, "the given role name invalid");
         }
-        registerModel.setPassword(this.passwordEncoder.encode(registerModel.getPassword()));
-        if (!StringUtils.hasLength(registerModel.getNickname())) {
-            registerModel.setNickname(registerModel.getUsername());
+        userRegisterModel.setPassword(this.passwordEncoder.encode(userRegisterModel.getPassword()));
+        if (!StringUtils.hasLength(userRegisterModel.getNickname())) {
+            userRegisterModel.setNickname(userRegisterModel.getUsername());
         }
-        return this.userService.add(registerModel, roles);
+        return this.userService.add(userRegisterModel, roles);
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import com.github.ksewen.ganyu.dto.base.Result;
+import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.JacksonHelpers;
 

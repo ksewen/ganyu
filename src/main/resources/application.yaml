@@ -25,7 +25,7 @@ spring:
       maximum-pool-size: 10
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-    property-naming-strategy: LOWER_CASE
+    property-naming-strategy: LOWER_CAMEL_CASE
   jpa:
     show-sql: true
     hibernate:

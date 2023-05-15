@@ -3,7 +3,7 @@ package com.github.ksewen.ganyu.service;
 import java.util.Optional;
 
 import com.github.ksewen.ganyu.domain.Token;
-import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
+import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 
 /**
  * @author ksewen

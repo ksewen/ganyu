@@ -2,6 +2,7 @@ package com.github.ksewen.ganyu.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import com.github.ksewen.ganyu.configuration.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.AdminService;
@@ -19,10 +20,8 @@ public class AdminServiceImpl implements AdminService {
 
     private final AuthService authService;
 
-    private final String USER_ROLE_NAME = "ADMIN";
-
     @Override
-    public User add(UserRegisterModel registerModel) {
-        return this.authService.register(registerModel, this.USER_ROLE_NAME);
+    public User add(UserRegisterModel userRegisterModel) {
+        return this.authService.register(userRegisterModel, AuthenticationConstants.ADMIN_ROLE_NAME);
     }
 }

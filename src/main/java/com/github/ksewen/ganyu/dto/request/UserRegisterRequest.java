@@ -1,4 +1,4 @@
-package com.github.ksewen.ganyu.dto.auth;
+package com.github.ksewen.ganyu.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @ToString(callSuper = true)
-public class RegisterRequest extends LoginRequest {
+public class UserRegisterRequest extends LoginRequest {
 
     @NotBlank(message = "{auth.username.null}")
     private String username;

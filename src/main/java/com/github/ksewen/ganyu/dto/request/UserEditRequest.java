@@ -1,27 +1,28 @@
-package com.github.ksewen.ganyu.model;
+package com.github.ksewen.ganyu.dto.request;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 /**
  * @author ksewen
- * @date 10.05.2023 13:38
+ * @date 15.05.2023 22:36
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @ToString
-public class UserRegisterModel {
+public class UserEditRequest {
+
+    private Long id;
 
     private String username;
-
-    private String nickname;
 
     private String email;
 
     private String password;
+
+    private String nickname;
 
     private String mobile;
 

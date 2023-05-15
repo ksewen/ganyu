@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.dto.request.UserRegisterRequest;
+import com.github.ksewen.ganyu.dto.request.UserEditRequest;
 import com.github.ksewen.ganyu.dto.response.UserInfoResponse;
 import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
-import com.github.ksewen.ganyu.model.UserRegisterModel;
-import com.github.ksewen.ganyu.service.AdminService;
+import com.github.ksewen.ganyu.model.UserEditModel;
+import com.github.ksewen.ganyu.security.Authentication;
+import com.github.ksewen.ganyu.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,26 +21,29 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * @author ksewen
- * @date 10.05.2023 12:24
+ * @date 15.05.2023 22:23
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/user")
 @SecurityRequirement(name = "jwt-auth")
 @RequiredArgsConstructor
-public class AdminController implements LoggingController {
-
-    private final String NAME = "administrator";
-
-    private final AdminService adminService;
+public class UserController implements LoggingController {
 
     private final BeanMapperHelpers beanMapperHelpers;
 
-    @Operation(summary = "add administrator")
-    @PostMapping("/add")
-    public Result<UserInfoResponse> add(@Valid @RequestBody UserRegisterRequest request) {
-        UserRegisterModel userRegisterModel = this.beanMapperHelpers.createAndCopyProperties(request,
-                UserRegisterModel.class);
-        User user = this.adminService.add(userRegisterModel);
+    private final UserService userService;
+
+    private final Authentication authentication;
+
+    private final String NAME = "user";
+
+    @Operation(summary = "edit user information")
+    @PostMapping("/edit")
+    public Result<UserInfoResponse> edit(@Valid @RequestBody UserEditRequest request) {
+        UserEditModel userEditModel = this.beanMapperHelpers.createAndCopyProperties(request,
+                UserEditModel.class);
+        userEditModel.setId(this.authentication.getUserId());
+        User user = this.userService.edit(userEditModel, this.authentication.getUserId());
         return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
     }
 

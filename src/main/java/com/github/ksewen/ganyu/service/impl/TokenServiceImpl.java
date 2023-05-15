@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.InvalidParamException;
 import com.github.ksewen.ganyu.domain.Token;
-import com.github.ksewen.ganyu.dto.auth.JwtTokenResponse;
+import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 import com.github.ksewen.ganyu.mapper.TokenMapper;
 import com.github.ksewen.ganyu.model.JwtUserModel;
 import com.github.ksewen.ganyu.service.JwtService;

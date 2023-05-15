@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
-import com.github.ksewen.ganyu.dto.base.Result;
+import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.enums.ResultCode;
 
 import lombok.extern.slf4j.Slf4j;
