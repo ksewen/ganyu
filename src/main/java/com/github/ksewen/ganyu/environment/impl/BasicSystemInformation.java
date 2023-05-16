@@ -3,7 +3,7 @@ package com.github.ksewen.ganyu.environment.impl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.github.ksewen.ganyu.environment.SystemInformation;
 
@@ -16,19 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BasicSystemInformation implements SystemInformation {
 
-    private final String UNSET = "unset";
-
-    private final String SYSTEM_ENV_KEY = "spring.profiles.active";
-
-    private final String SYSTEM_APPLICATION_NAME_ID_KEY = "spring.application.name";
-
     private String hostName;
 
     private String hostIp;
 
-    private String environment = this.UNSET;
+    @Value("${spring.profiles.active:UNSET}")
+    private String environment;
 
-    private String applicationName = this.UNSET;
+    @Value("${spring.application.name:UNSET}")
+    private String applicationName;
 
     @Override
     public String getHostName() {
@@ -51,11 +47,9 @@ public class BasicSystemInformation implements SystemInformation {
     }
 
     private static BasicSystemInformation newInstance() {
-        BasicSystemInformation applicationEnvironment = new BasicSystemInformation();
-        applicationEnvironment.initHostInfo();
-        applicationEnvironment.initEnvironment();
-        applicationEnvironment.initApplicationName();
-        return applicationEnvironment;
+        BasicSystemInformation basicSystemInformation = new BasicSystemInformation();
+        basicSystemInformation.initHostInfo();
+        return basicSystemInformation;
     }
 
     private void initHostInfo() {
@@ -68,20 +62,6 @@ public class BasicSystemInformation implements SystemInformation {
         }
     }
 
-    private void initEnvironment() {
-        String env = System.getProperty(SYSTEM_ENV_KEY);
-        if (StringUtils.hasLength(env)) {
-            this.environment = env;
-        }
-    }
-
-    private void initApplicationName() {
-        String applicationName = System.getProperty(SYSTEM_APPLICATION_NAME_ID_KEY);
-        if (StringUtils.hasLength(applicationName)) {
-            this.applicationName = applicationName;
-        }
-    }
-
     public final static class SingletonHolder {
         public static final BasicSystemInformation instance = BasicSystemInformation.newInstance();
     }
@@ -89,4 +69,5 @@ public class BasicSystemInformation implements SystemInformation {
     public static BasicSystemInformation getInstance() {
         return SingletonHolder.instance;
     }
+
 }
