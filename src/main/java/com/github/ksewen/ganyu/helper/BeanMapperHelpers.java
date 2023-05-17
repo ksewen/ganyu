@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.Assert;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.enums.ResultCode;
@@ -21,7 +22,10 @@ import lombok.extern.slf4j.Slf4j;
  **/
 @Slf4j
 public class BeanMapperHelpers {
+
+    private final String EMPTY_SOURCE_MESSAGE = "given source object is empty";
     public <T> T createAndCopyProperties(Object source, Class<T> clazz) {
+        Assert.notNull(source, this.EMPTY_SOURCE_MESSAGE);
         try {
             T dest = clazz.getDeclaredConstructor().newInstance();
             BeanUtils.copyProperties(source, dest);
@@ -37,6 +41,7 @@ public class BeanMapperHelpers {
     }
 
     public <T> T createAndCopyNotNullProperties(Object source, Class<T> clazz) {
+        Assert.notNull(source, this.EMPTY_SOURCE_MESSAGE);
         try {
             T dest = clazz.getDeclaredConstructor().newInstance();
             BeanUtils.copyProperties(source, dest, getNullPropertyNames(source));
@@ -52,6 +57,7 @@ public class BeanMapperHelpers {
     }
 
     public String[] getNullPropertyNames(Object source) {
+        Assert.notNull(source, this.EMPTY_SOURCE_MESSAGE);
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
         Set emptyNames = new HashSet();

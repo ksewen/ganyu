@@ -11,10 +11,10 @@ spring:
     encoding: UTF-8
     basename: validation-messages
   datasource:
-    password: '123456'
+    url: jdbc:mysql://localhost:3306/ganyu?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&nullCatalogMeansCurrent=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    url: jdbc:mysql://localhost:3306/ganyu?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&nullCatalogMeansCurrent=true
+    password: 123456
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       auto-commit: true
@@ -23,13 +23,14 @@ spring:
       connection-timeout: 10000
       max-lifetime: 100000
       maximum-pool-size: 10
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    property-naming-strategy: LOWER_CAMEL_CASE
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    property-naming-strategy: LOWER_CAMEL_CASE
+
 
 application:
   security:
