@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.User;
+import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.*;
 
@@ -56,7 +59,7 @@ class AuthServiceImplTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    void register() {
+    void registerWhenSuccess() {
         final String userRoleName = "USER";
         final List<Role> roles = Arrays.asList(Role.builder().id(1L).name(userRoleName).build());
         final String name = "ksewen";
@@ -98,5 +101,20 @@ class AuthServiceImplTest {
         assertThat(actual).matches(u -> Objects.equals(u.getMobile(), mobile));
         assertThat(actual).matches(u -> Objects.equals(u.getAvatarUrl(), avatarUrl));
         assertThat(actual).matches(u -> Objects.equals(u.getPassword(), encodePassword));
+    }
+
+    @Test
+    void registerWhenInvalidRole() {
+        final String name = "ksewen";
+        final String email = "ksewen77@gmail.com";
+        final String password = "123456";
+        when(this.roleService.findByNames(any())).thenReturn(null);
+        UserRegisterModel registerModel = UserRegisterModel.builder().username(name).email(email).password(password)
+                .build();
+        CommonException exception = Assertions.assertThrows(CommonException.class, () -> {
+            this.authService.register(registerModel, "NOT_EXIST");
+        });
+        assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()));
+        assertThat(exception).matches(e -> "the given role name invalid".equals(e.getMessage()));
     }
 }
