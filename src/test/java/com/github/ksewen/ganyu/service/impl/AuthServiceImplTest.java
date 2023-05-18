@@ -9,11 +9,14 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,8 +25,11 @@ import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.Role;
+import com.github.ksewen.ganyu.domain.Token;
 import com.github.ksewen.ganyu.domain.User;
+import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 import com.github.ksewen.ganyu.enums.ResultCode;
+import com.github.ksewen.ganyu.model.JwtUserModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.*;
 
@@ -58,13 +64,14 @@ class AuthServiceImplTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
 
+    private final String name = "ksewen";
+    private final String password = "123456";
+    private final String email = "ksewen77@gmail.com";
+
     @Test
     void registerWhenSuccess() {
         final String userRoleName = "USER";
         final List<Role> roles = Arrays.asList(Role.builder().id(1L).name(userRoleName).build());
-        final String name = "ksewen";
-        final String email = "ksewen77@gmail.com";
-        final String password = "123456";
         final String mobile = "5050107777";
         final String avatarUrl = "http://www.ganyu.com";
         final String encodePassword = "encodePassword";
@@ -95,18 +102,14 @@ class AuthServiceImplTest {
         UserRegisterModel registerModel = UserRegisterModel.builder().username(name).email(email).password(password)
                 .mobile(mobile).avatarUrl(avatarUrl).build();
         User actual = this.authService.register(registerModel, userRoleName);
-        assertThat(actual).matches(u -> Objects.equals(u.getUsername(), name));
-        assertThat(actual).matches(u -> Objects.equals(u.getNickname(), name));
-        assertThat(actual).matches(u -> Objects.equals(u.getEmail(), email));
-        assertThat(actual).matches(u -> Objects.equals(u.getMobile(), mobile));
-        assertThat(actual).matches(u -> Objects.equals(u.getAvatarUrl(), avatarUrl));
-        assertThat(actual).matches(u -> Objects.equals(u.getPassword(), encodePassword));
+        assertThat(actual).matches(u -> name.equals(u.getUsername())).matches(u -> name.equals(u.getUsername()))
+                .matches(u -> email.equals(u.getEmail())).matches(u -> mobile.equals(u.getMobile()))
+                .matches(u -> avatarUrl.equals(u.getAvatarUrl())).matches(u -> encodePassword.equals(u.getPassword()));
     }
 
     @Test
     void registerWhenInvalidRole() {
         final String name = "ksewen";
-        final String email = "ksewen77@gmail.com";
         final String password = "123456";
         when(this.roleService.findByNames(any())).thenReturn(null);
         UserRegisterModel registerModel = UserRegisterModel.builder().username(name).email(email).password(password)
@@ -114,7 +117,29 @@ class AuthServiceImplTest {
         CommonException exception = Assertions.assertThrows(CommonException.class, () -> {
             this.authService.register(registerModel, "NOT_EXIST");
         });
-        assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()));
-        assertThat(exception).matches(e -> "the given role name invalid".equals(e.getMessage()));
+        assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
+                .matches(e -> "the given role name invalid".equals(e.getMessage()));
+    }
+
+    @Test
+    void login() {
+
+        final String accessToken = "accessToken";
+        final String refreshToken = "refreshToken";
+        when(this.authenticationManager.authenticate(
+                argThat(token -> name.equals(token.getPrincipal()) && password.equals(token.getCredentials()))))
+                        .thenReturn(new TestingAuthenticationToken(name, password));
+        when(this.userDetailsService.loadUserByUsername(name))
+                .thenReturn(JwtUserModel.builder().id(1L).username(name).nickname(name).password(password).build());
+        ArgumentMatcher<UserDetails> matcher = argument -> name.equals(argument.getUsername())
+                && password.equals(argument.getPassword());
+        when(this.jwtService.generateToken(argThat(matcher))).thenReturn(accessToken);
+        when(this.jwtService.generateRefreshToken(argThat(matcher))).thenReturn(refreshToken);
+        when(this.tokenService.save(1L, accessToken))
+                .thenReturn(Token.builder().id(1L).userId(1L).token(accessToken).build());
+        JwtTokenResponse actual = this.authService.login(name, password);
+        assertThat(actual).matches(t -> Objects.equals(1L, t.getId())).matches(t -> accessToken.equals(t.getToken()))
+                .matches(t -> refreshToken.equals(t.getRefreshToken()));
+        verify(this.tokenService, times(1)).removeAllUserTokens(1L);
     }
 }
