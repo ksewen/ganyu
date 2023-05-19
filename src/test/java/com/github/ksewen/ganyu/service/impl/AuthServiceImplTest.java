@@ -37,6 +37,7 @@ import com.github.ksewen.ganyu.service.*;
  * @author ksewen
  * @date 17.05.2023 19:13
  */
+// api for testing usage sample
 @SpringBootTest(classes = { AuthServiceImpl.class, BCryptPasswordEncoder.class })
 class AuthServiceImplTest {
 

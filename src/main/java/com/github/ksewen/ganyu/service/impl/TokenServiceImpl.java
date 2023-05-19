@@ -67,13 +67,10 @@ public class TokenServiceImpl implements TokenService {
         String username = this.jwtService.extractUsername(refreshToken);
         if (StringUtils.hasLength(username)) {
             final JwtUserModel user = (JwtUserModel) this.userDetailsService.loadUserByUsername(username);
-            if (user == null) {
-                new InvalidParamException("can't resolve the refresh_token");
-            }
             if (this.jwtService.validateToken(refreshToken, user)) {
                 String accessToken = this.jwtService.generateToken(user);
                 this.removeAllUserTokens(user.getId());
-                Token save = save(user.getId(), accessToken);
+                Token save = this.save(user.getId(), accessToken);
                 return JwtTokenResponse.builder().id(save.getId()).token(accessToken).refreshToken(refreshToken).build();
             }
         }
