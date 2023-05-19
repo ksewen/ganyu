@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 /**
  * @author ksewen
@@ -11,10 +10,18 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(callSuper = true)
-public class UserEditModel extends UserRegisterModel {
+@Builder
+@ToString
+public class UserModifyModel {
 
     private Long id;
+
+    private String nickname;
+
+    private String password;
+
+    private String mobile;
+
+    private String avatarUrl;
 
 }

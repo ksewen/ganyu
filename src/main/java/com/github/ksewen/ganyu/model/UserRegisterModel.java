@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 /**
  * @author ksewen
@@ -11,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @ToString
 public class UserRegisterModel {
 

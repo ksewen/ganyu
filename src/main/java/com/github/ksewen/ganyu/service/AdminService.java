@@ -9,6 +9,6 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
  */
 public interface AdminService {
 
-    User add(UserRegisterModel userRegisterModel);
+    User modify(UserRegisterModel userRegisterModel);
 
 }

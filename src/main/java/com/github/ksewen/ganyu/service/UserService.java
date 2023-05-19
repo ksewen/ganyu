@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.model.UserEditModel;
+import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 
 /**
@@ -17,6 +17,6 @@ public interface UserService {
     Optional<User> findByUsername(String username);
     User add(UserRegisterModel userRegisterModel, List<Role> roles);
 
-    User edit(UserEditModel userEditModel, long operationUserId);
+    User modify(UserModifyModel userModifyModel, long operationUserId);
 
 }

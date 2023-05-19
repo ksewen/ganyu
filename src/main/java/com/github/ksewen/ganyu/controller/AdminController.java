@@ -34,12 +34,12 @@ public class AdminController implements LoggingController {
 
     private final BeanMapperHelpers beanMapperHelpers;
 
-    @Operation(summary = "add administrator")
-    @PostMapping("/add")
-    public Result<UserInfoResponse> add(@Valid @RequestBody UserRegisterRequest request) {
+    @Operation(summary = "modify administrator")
+    @PostMapping("/modify")
+    public Result<UserInfoResponse> modify(@Valid @RequestBody UserRegisterRequest request) {
         UserRegisterModel userRegisterModel = this.beanMapperHelpers.createAndCopyProperties(request,
                 UserRegisterModel.class);
-        User user = this.adminService.add(userRegisterModel);
+        User user = this.adminService.modify(userRegisterModel);
         return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
     }
 

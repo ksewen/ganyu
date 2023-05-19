@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import com.github.ksewen.ganyu.configuration.constant.AuthenticationConstants;
@@ -18,7 +19,7 @@ import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.mapper.UserMapper;
 import com.github.ksewen.ganyu.mapper.specification.UserSpecification;
-import com.github.ksewen.ganyu.model.UserEditModel;
+import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.RoleService;
 import com.github.ksewen.ganyu.service.UserRoleService;
@@ -73,8 +74,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User edit(UserEditModel userEditModel, long operationUserId) {
-        if (userEditModel.getId() == null || userEditModel.getId() != operationUserId) {
+    public User modify(UserModifyModel userModifyModel, long operationUserId) {
+        Assert.notNull(userModifyModel.getId(), "the id of the modified user must be not blank");
+        if (userModifyModel.getId() != operationUserId) {
             List<Role> operationRoles = this.roleService.findByUserId(operationUserId);
             boolean access = !CollectionUtils.isEmpty(operationRoles) && operationRoles.stream()
                     .anyMatch(r -> AuthenticationConstants.ADMIN_ROLE_NAME.equals(r.getName()));
@@ -83,9 +85,9 @@ public class UserServiceImpl implements UserService {
                         "only administrator can edit other user information");
             }
         }
-        Optional<User> exist = this.userMapper.findById(userEditModel.getId());
+        Optional<User> exist = this.userMapper.findById(userModifyModel.getId());
         User insert = exist.orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND, "can not found a exist user by given id"));
-        BeanUtils.copyProperties(userEditModel, insert, this.beanMapperHelpers.getNullPropertyNames(userEditModel));
+        BeanUtils.copyProperties(userModifyModel, insert, this.beanMapperHelpers.getNullPropertyNames(userModifyModel));
         return this.userMapper.saveAndFlush(insert);
     }
 

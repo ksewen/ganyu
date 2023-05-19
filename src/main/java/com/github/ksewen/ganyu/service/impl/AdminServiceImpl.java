@@ -21,7 +21,7 @@ public class AdminServiceImpl implements AdminService {
     private final AuthService authService;
 
     @Override
-    public User add(UserRegisterModel userRegisterModel) {
+    public User modify(UserRegisterModel userRegisterModel) {
         return this.authService.register(userRegisterModel, AuthenticationConstants.ADMIN_ROLE_NAME);
     }
 }
