@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 
 import com.github.ksewen.ganyu.configuration.constant.AuthenticationConstants;
@@ -48,6 +49,9 @@ class UserServiceImplTest {
     @MockBean
     private RoleService roleService;
 
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
     private final String name = "ksewen";
 
     private final String email = "ksewen77@gmail.com";
@@ -55,6 +59,9 @@ class UserServiceImplTest {
     private final String password = "encodePassword";
 
     private final String modifyNickname = "ksewen77";
+
+    private final String modifyPassword = "modifyPassword";
+    private final String modifyEncodedPassword = "modifyEncodedPassword";
 
     @Test
     void addSuccess() {
@@ -82,9 +89,8 @@ class UserServiceImplTest {
     void addWithExistUser() {
         when(this.userMapper.findOne(any(UserSpecification.class))).thenReturn(
                 Optional.of(User.builder().id(1L).username(this.name).nickname(this.name).email(this.email).build()));
-        CommonException exception = Assertions.assertThrows(CommonException.class, () -> {
-            this.userService.add(this.generateUserRegisterModel(), null);
-        });
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.userService.add(this.generateUserRegisterModel(), null));
         assertThat(exception).matches(e -> ResultCode.ALREADY_EXIST.equals(e.getCode()))
                 .matches(e -> ResultCode.ALREADY_EXIST.getMessage().equals(e.getMessage()));
     }
@@ -96,12 +102,14 @@ class UserServiceImplTest {
         when(this.userMapper.saveAndFlush(argThat(user -> Objects.equals(1L, user.getId())
                 && this.name.equals(user.getUsername()) && modifyNickname.equals(user.getNickname())
                 && this.email.equals(user.getEmail()) && this.password.equals(user.getPassword()))))
-                        .thenReturn(User.builder().id(1L).username(this.name).nickname(this.modifyNickname).email(this.email)
-                                .password(this.password).build());
+                        .thenReturn(User.builder().id(1L).username(this.name).nickname(this.modifyNickname)
+                                .email(this.email).password(this.password).build());
         User actual = this.userService.modify(this.generateUserModifyModel(), 1L);
         assertThat(actual).matches(u -> Objects.equals(1L, u.getId())).matches(u -> this.name.equals(u.getUsername()))
                 .matches(u -> this.modifyNickname.equals(u.getNickname())).matches(u -> this.email.equals(u.getEmail()))
                 .matches(u -> this.password.equals(u.getPassword()));
+        assertThat(actual.getMobile()).isNull();
+        assertThat(actual.getAvatarUrl()).isNull();
         verify(this.roleService, times(0)).findByUserId(1L);
     }
 
@@ -114,13 +122,15 @@ class UserServiceImplTest {
         when(this.userMapper.saveAndFlush(argThat(user -> Objects.equals(2L, user.getId())
                 && this.name.equals(user.getUsername()) && modifyNickname.equals(user.getNickname())
                 && this.email.equals(user.getEmail()) && this.password.equals(user.getPassword()))))
-                .thenReturn(User.builder().id(2L).username(this.name).nickname(this.modifyNickname).email(this.email)
-                        .password(this.password).build());
+                        .thenReturn(User.builder().id(2L).username(this.name).nickname(this.modifyNickname)
+                                .email(this.email).password(this.password).build());
         UserModifyModel userModifyModel = UserModifyModel.builder().id(2L).nickname(this.modifyNickname).build();
         User actual = this.userService.modify(userModifyModel, 1L);
         assertThat(actual).matches(u -> Objects.equals(2L, u.getId())).matches(u -> this.name.equals(u.getUsername()))
                 .matches(u -> this.modifyNickname.equals(u.getNickname())).matches(u -> this.email.equals(u.getEmail()))
                 .matches(u -> this.password.equals(u.getPassword()));
+        assertThat(actual.getMobile()).isNull();
+        assertThat(actual.getAvatarUrl()).isNull();
         verify(this.roleService, times(1)).findByUserId(1L);
     }
 
@@ -128,9 +138,8 @@ class UserServiceImplTest {
     void modifyAnotherWithoutAuthorization() {
         when(this.roleService.findByUserId(anyLong()))
                 .thenReturn(Arrays.asList(Role.builder().id(2L).name(AuthenticationConstants.USER_ROLE_NAME).build()));
-        CommonException exception = Assertions.assertThrows(CommonException.class, () -> {
-            this.userService.modify(this.generateUserModifyModel(), 2L);
-        });
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.userService.modify(this.generateUserModifyModel(), 2L));
         assertThat(exception).matches(e -> ResultCode.ACCESS_DENIED.equals(e.getCode()))
                 .matches(e -> "only administrator can edit other user information".equals(e.getMessage()));
     }
@@ -140,9 +149,49 @@ class UserServiceImplTest {
         when(this.userMapper.findById(anyLong())).thenReturn(Optional.of(User.builder().id(1L).username(this.name)
                 .nickname(this.name).email(this.email).password(this.password).build()));
         when(this.userMapper.findById(anyLong())).thenReturn(Optional.ofNullable(null));
-        CommonException exception = Assertions.assertThrows(CommonException.class, () -> {
-            this.userService.modify(this.generateUserModifyModel(), 1L);
-        });
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.userService.modify(this.generateUserModifyModel(), 1L));
+        assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
+                .matches(e -> "can not found a exist user by given id".equals(e.getMessage()));
+    }
+
+    @Test
+    void modifyPasswordSuccess() {
+        when(this.userMapper.findById(anyLong())).thenReturn(Optional.of(User.builder().id(1L).username(this.name)
+                .nickname(this.name).email(this.email).password(this.password).build()));
+        when(this.passwordEncoder.matches(anyString(),
+                argThat(encodedPassword -> this.password.equals(encodedPassword)))).thenReturn(Boolean.TRUE);
+        when(this.passwordEncoder.encode(modifyPassword)).thenReturn(modifyEncodedPassword);
+        when(this.userMapper.saveAndFlush(
+                argThat(user -> this.name.equals(user.getUsername()) && this.name.equals(user.getNickname())
+                        && this.email.equals(user.getEmail()) && modifyEncodedPassword.equals(user.getPassword()))))
+                                .thenReturn(User.builder().id(1L).username(this.name).nickname(this.name)
+                                        .email(this.email).password(modifyEncodedPassword).build());
+        User actual = this.userService.modifyPassword(this.password, modifyPassword, 1L);
+        assertThat(actual).matches(u -> this.name.equals(u.getUsername()))
+                .matches(u -> this.name.equals(u.getNickname())).matches(u -> this.email.equals(u.getEmail()))
+                .matches(u -> modifyEncodedPassword.equals(u.getPassword()));
+        assertThat(actual.getMobile()).isNull();
+        assertThat(actual.getAvatarUrl()).isNull();
+    }
+
+    @Test
+    void modifyPasswordWithWrongOldPassword() {
+        when(this.userMapper.findById(anyLong())).thenReturn(Optional.of(User.builder().id(1L).username(this.name)
+                .nickname(this.name).email(this.email).password(this.password).build()));
+        when(this.passwordEncoder.matches(anyString(),
+                argThat(encodedPassword -> this.password.equals(encodedPassword)))).thenReturn(Boolean.FALSE);
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.userService.modifyPassword(this.password, modifyPassword, 1L));
+        assertThat(exception).matches(e -> ResultCode.ACCESS_DENIED.equals(e.getCode()))
+                .matches(e -> "invalid old password".equals(e.getMessage()));
+    }
+
+    @Test
+    void modifyPasswordWithNotExistUser() {
+        when(this.userMapper.findById(anyLong())).thenReturn(Optional.ofNullable(null));
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.userService.modifyPassword(this.password, modifyPassword, 1L));
         assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
                 .matches(e -> "can not found a exist user by given id".equals(e.getMessage()));
     }

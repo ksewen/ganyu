@@ -16,7 +16,6 @@ public interface UserService {
 
     Optional<User> findByUsername(String username);
     User add(UserRegisterModel userRegisterModel, List<Role> roles);
-
     User modify(UserModifyModel userModifyModel, long operationUserId);
-
+    User modifyPassword(String exist, String modify, long userId);
 }

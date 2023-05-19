@@ -48,7 +48,7 @@ public class AuthController implements LoggingController {
     @Operation(summary = "login")
     @PostMapping("/login")
     public Result<JwtTokenResponse> login(@Valid @RequestBody LoginRequest request) {
-        JwtTokenResponse token = this.authService.login(request.getEmail(), request.getPassword());
+        JwtTokenResponse token = this.authService.login(request.getUsername(), request.getPassword());
         return Result.success(token);
     }
 

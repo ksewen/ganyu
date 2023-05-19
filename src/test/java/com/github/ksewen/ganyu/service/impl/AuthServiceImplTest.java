@@ -115,9 +115,8 @@ class AuthServiceImplTest {
         when(this.roleService.findByNames(any())).thenReturn(null);
         UserRegisterModel registerModel = UserRegisterModel.builder().username(name).email(email).password(password)
                 .build();
-        CommonException exception = Assertions.assertThrows(CommonException.class, () -> {
-            this.authService.register(registerModel, "NOT_EXIST");
-        });
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.authService.register(registerModel, "NOT_EXIST"));
         assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
                 .matches(e -> "the given role name invalid".equals(e.getMessage()));
     }

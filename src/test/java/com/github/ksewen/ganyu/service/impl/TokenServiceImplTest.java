@@ -63,9 +63,8 @@ class TokenServiceImplTest {
     void refreshWithInvalidToken() {
         final String refreshToken = "invalid_token";
         when(this.jwtService.extractUsername(anyString())).thenReturn(null);
-        InvalidParamException exception = Assertions.assertThrows(InvalidParamException.class, () -> {
-            this.tokenService.refresh(refreshToken);
-        });
+        InvalidParamException exception = Assertions.assertThrows(InvalidParamException.class,
+                () -> this.tokenService.refresh(refreshToken));
         assertThat(exception).matches(e -> ResultCode.PARAM_INVALID.equals(e.getCode()))
                 .matches(e -> "invalid refresh_token".equals(e.getMessage()));
     }

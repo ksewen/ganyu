@@ -35,8 +35,6 @@ import lombok.RequiredArgsConstructor;
 @ComponentScan("com.github.ksewen.ganyu.security")
 public class SecurityAutoConfiguration {
 
-    private final UserDetailsService userDetailsService;
-
     private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     private final JwtProperties jwtProperties;
@@ -44,18 +42,6 @@ public class SecurityAutoConfiguration {
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     private final AccessDeniedHandler accessDeniedHandler;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder)
-            throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder).and().build();
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {

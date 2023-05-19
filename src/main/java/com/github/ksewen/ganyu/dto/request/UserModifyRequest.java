@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class UserEditRequest {
+public class UserModifyRequest {
 
     private Long id;
 
