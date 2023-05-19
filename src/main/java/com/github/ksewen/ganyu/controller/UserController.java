@@ -1,15 +1,19 @@
 package com.github.ksewen.ganyu.controller;
 
-import com.github.ksewen.ganyu.dto.request.PasswordModifyRequest;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.github.ksewen.ganyu.domain.User;
+import com.github.ksewen.ganyu.dto.request.PasswordModifyRequest;
 import com.github.ksewen.ganyu.dto.request.UserModifyRequest;
 import com.github.ksewen.ganyu.dto.response.UserInfoResponse;
 import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.security.Authentication;
+import com.github.ksewen.ganyu.service.AuthService;
 import com.github.ksewen.ganyu.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +35,8 @@ public class UserController implements LoggingController {
 
     private final UserService userService;
 
+    private final AuthService authService;
+
     private final Authentication authentication;
 
     private final String NAME = "user";
@@ -51,6 +57,13 @@ public class UserController implements LoggingController {
         User user = this.userService.modifyPassword(request.getExist(), request.getModify(),
                 this.authentication.getUserId());
         return Result.success(this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class));
+    }
+
+    @Operation(summary = "logout")
+    @PostMapping("/logout")
+    public Result<Boolean> logout() {
+        this.authService.logout(this.authentication.getUserId());
+        return Result.success(Boolean.TRUE);
     }
 
     @Override

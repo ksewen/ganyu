@@ -73,4 +73,10 @@ public class AuthServiceImpl implements AuthService {
         return JwtTokenResponse.builder().id(save.getId()).token(save.getToken()).refreshToken(refreshToken).build();
     }
 
+
+    @Override
+    public void logout(Long userId) {
+        this.tokenService.removeAllUserTokens(userId);
+    }
+
 }

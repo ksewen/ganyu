@@ -1,5 +1,5 @@
 server:
-  port: '38080'
+  port: 8087
   error:
     whitelabel:
       enabled: false

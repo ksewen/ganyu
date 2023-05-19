@@ -14,4 +14,5 @@ public interface AuthService {
 
     JwtTokenResponse login(String username, String password);
 
+    void logout(Long userId);
 }
