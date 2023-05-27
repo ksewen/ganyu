@@ -6,10 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ksewen.ganyu.environment.SystemInformation;
-import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
-import com.github.ksewen.ganyu.helper.JacksonHelpers;
-import com.github.ksewen.ganyu.helper.MDCHelpers;
-import com.github.ksewen.ganyu.helper.UUIDHelpers;
+import com.github.ksewen.ganyu.helper.*;
 
 /**
  * @author ksewen
@@ -36,5 +33,10 @@ public class HelperAutoConfiguration {
     @Bean
     public JacksonHelpers jacksonHelpers(@Autowired ObjectMapper objectMapper) {
         return new JacksonHelpers(objectMapper);
+    }
+
+    @Bean
+    public CaptchaHelpers captchaHelpers() {
+        return new CaptchaHelpers();
     }
 }

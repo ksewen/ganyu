@@ -125,3 +125,5 @@ hs_err_pid*
 
 # mybatis generator
 /src/main/java/com/github/ksewen/ganyu/generate
+
+application-test.yaml

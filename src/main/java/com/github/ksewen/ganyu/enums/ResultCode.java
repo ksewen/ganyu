@@ -17,6 +17,7 @@ public enum ResultCode {
     PARAM_INVALID(40000, "parameter invalid"),
     ALREADY_EXIST(40001, "the record ist already exist"),
     DUPLICATE_RECORD(40003,"find duplicate records"),
+    CAPTCHA_INVALID(40004, "invalid captcha"),
     UNAUTHORIZED(41000, "invalid username or password"),
     ACCESS_DENIED(43000, "permission denied"),
     NOT_FOUND(44000, "can not find the record"),
