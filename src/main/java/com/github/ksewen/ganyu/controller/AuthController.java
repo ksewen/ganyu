@@ -2,7 +2,7 @@ package com.github.ksewen.ganyu.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.github.ksewen.ganyu.configuration.constant.AuthenticationConstants;
+import com.github.ksewen.ganyu.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.dto.request.LoginRequest;
 import com.github.ksewen.ganyu.dto.request.UserRegisterRequest;

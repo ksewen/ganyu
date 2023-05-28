@@ -2,7 +2,7 @@ package com.github.ksewen.ganyu.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.github.ksewen.ganyu.configuration.constant.AuthenticationConstants;
+import com.github.ksewen.ganyu.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.AdminService;

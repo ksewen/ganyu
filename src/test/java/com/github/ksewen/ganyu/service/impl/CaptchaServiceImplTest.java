@@ -18,6 +18,8 @@ import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.CaptchaHelpers;
 import com.github.ksewen.ganyu.mapper.CaptchaTypeMapper;
 import com.github.ksewen.ganyu.mapper.UserCaptchaMapper;
+import com.github.ksewen.ganyu.service.MailService;
+import com.github.ksewen.ganyu.service.UserService;
 
 /**
  * @author ksewen
@@ -34,6 +36,12 @@ class CaptchaServiceImplTest {
 
     @MockBean
     private CaptchaTypeMapper captchaTypeMapper;
+
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private MailService mailService;
 
     @MockBean
     private UserCaptchaMapper userCaptchaMapper;

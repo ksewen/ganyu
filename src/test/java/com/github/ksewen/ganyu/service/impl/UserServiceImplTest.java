@@ -16,8 +16,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 
-import com.github.ksewen.ganyu.configuration.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
+import com.github.ksewen.ganyu.constant.AuthenticationConstants;
+import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.enums.ResultCode;
@@ -152,7 +153,7 @@ class UserServiceImplTest {
         CommonException exception = Assertions.assertThrows(CommonException.class,
                 () -> this.userService.modify(this.generateUserModifyModel(), 1L));
         assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
-                .matches(e -> "can not found a exist user by given id".equals(e.getMessage()));
+                .matches(e -> ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE.equals(e.getMessage()));
     }
 
     @Test
@@ -193,7 +194,7 @@ class UserServiceImplTest {
         CommonException exception = Assertions.assertThrows(CommonException.class,
                 () -> this.userService.modifyPassword(this.password, modifyPassword, 1L));
         assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
-                .matches(e -> "can not found a exist user by given id".equals(e.getMessage()));
+                .matches(e -> ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE.equals(e.getMessage()));
     }
 
     private UserRegisterModel generateUserRegisterModel() {

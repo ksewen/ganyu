@@ -1,6 +1,8 @@
 package com.github.ksewen.ganyu.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 /**
@@ -14,7 +16,8 @@ import lombok.*;
 @Builder
 public class CaptchaApplyRequest {
 
-    @NotBlank(message = "{captcha.type.id.null}")
+    @NotNull(message = "{captcha.type.id.null}")
+    @Range(min = 1)
     private Long typeId;
 
 }

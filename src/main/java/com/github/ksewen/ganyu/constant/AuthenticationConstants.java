@@ -1,4 +1,4 @@
-package com.github.ksewen.ganyu.configuration.constant;
+package com.github.ksewen.ganyu.constant;
 
 /**
  * @author ksewen

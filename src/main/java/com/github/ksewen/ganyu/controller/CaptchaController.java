@@ -11,6 +11,7 @@ import com.github.ksewen.ganyu.security.Authentication;
 import com.github.ksewen.ganyu.service.CaptchaService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequestMapping("/captcha")
+@SecurityRequirement(name = "jwt-auth")
 @RequiredArgsConstructor
 public class CaptchaController implements LoggingController {
 
@@ -33,7 +35,7 @@ public class CaptchaController implements LoggingController {
     @PostMapping("/apply")
     public Result<Boolean> apply(@Valid @RequestBody CaptchaApplyRequest request) {
         this.captchaService.apply(this.authentication.getUserId(), request.getTypeId());
-        return Result.success();
+        return Result.success(Boolean.TRUE);
     }
 
     @Override

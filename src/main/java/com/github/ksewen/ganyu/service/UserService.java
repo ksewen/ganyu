@@ -15,6 +15,8 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
 public interface UserService {
 
     Optional<User> findByUsername(String username);
+
+    Optional<User> findById(long userId);
     User add(UserRegisterModel userRegisterModel, List<Role> roles);
     User modify(UserModifyModel userModifyModel, long operationUserId);
     User modifyPassword(String exist, String modify, long userId);
