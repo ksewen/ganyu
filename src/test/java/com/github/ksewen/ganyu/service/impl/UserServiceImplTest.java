@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
@@ -50,9 +49,6 @@ class UserServiceImplTest {
     @MockBean
     private RoleService roleService;
 
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
     private final String name = "ksewen";
 
     private final String email = "ksewen77@gmail.com";
@@ -63,6 +59,8 @@ class UserServiceImplTest {
 
     private final String modifyPassword = "modifyPassword";
     private final String modifyEncodedPassword = "modifyEncodedPassword";
+
+    private final String captcha = "111111";
 
     @Test
     void addSuccess() {
@@ -156,47 +154,6 @@ class UserServiceImplTest {
                 .matches(e -> ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE.equals(e.getMessage()));
     }
 
-    @Test
-    void modifyPasswordSuccess() {
-        when(this.userMapper.findById(anyLong())).thenReturn(Optional.of(User.builder().id(1L).username(this.name)
-                .nickname(this.name).email(this.email).password(this.password).build()));
-        when(this.passwordEncoder.matches(anyString(),
-                argThat(encodedPassword -> this.password.equals(encodedPassword)))).thenReturn(Boolean.TRUE);
-        when(this.passwordEncoder.encode(modifyPassword)).thenReturn(modifyEncodedPassword);
-        when(this.userMapper.saveAndFlush(
-                argThat(user -> this.name.equals(user.getUsername()) && this.name.equals(user.getNickname())
-                        && this.email.equals(user.getEmail()) && modifyEncodedPassword.equals(user.getPassword()))))
-                                .thenReturn(User.builder().id(1L).username(this.name).nickname(this.name)
-                                        .email(this.email).password(modifyEncodedPassword).build());
-        User actual = this.userService.modifyPassword(this.password, modifyPassword, 1L);
-        assertThat(actual).matches(u -> this.name.equals(u.getUsername()))
-                .matches(u -> this.name.equals(u.getNickname())).matches(u -> this.email.equals(u.getEmail()))
-                .matches(u -> modifyEncodedPassword.equals(u.getPassword()));
-        assertThat(actual.getMobile()).isNull();
-        assertThat(actual.getAvatarUrl()).isNull();
-    }
-
-    @Test
-    void modifyPasswordWithWrongOldPassword() {
-        when(this.userMapper.findById(anyLong())).thenReturn(Optional.of(User.builder().id(1L).username(this.name)
-                .nickname(this.name).email(this.email).password(this.password).build()));
-        when(this.passwordEncoder.matches(anyString(),
-                argThat(encodedPassword -> this.password.equals(encodedPassword)))).thenReturn(Boolean.FALSE);
-        CommonException exception = Assertions.assertThrows(CommonException.class,
-                () -> this.userService.modifyPassword(this.password, modifyPassword, 1L));
-        assertThat(exception).matches(e -> ResultCode.ACCESS_DENIED.equals(e.getCode()))
-                .matches(e -> "invalid old password".equals(e.getMessage()));
-    }
-
-    @Test
-    void modifyPasswordWithNotExistUser() {
-        when(this.userMapper.findById(anyLong())).thenReturn(Optional.ofNullable(null));
-        CommonException exception = Assertions.assertThrows(CommonException.class,
-                () -> this.userService.modifyPassword(this.password, modifyPassword, 1L));
-        assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
-                .matches(e -> ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE.equals(e.getMessage()));
-    }
-
     private UserRegisterModel generateUserRegisterModel() {
         return UserRegisterModel.builder().username(this.name).nickname(this.name).email(this.email).password(password)
                 .build();
@@ -205,5 +162,4 @@ class UserServiceImplTest {
     private UserModifyModel generateUserModifyModel() {
         return UserModifyModel.builder().id(1L).nickname(this.modifyNickname).build();
     }
-
 }

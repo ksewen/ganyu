@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -16,8 +17,8 @@ import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.UserCaptcha;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.CaptchaHelpers;
-import com.github.ksewen.ganyu.mapper.CaptchaTypeMapper;
 import com.github.ksewen.ganyu.mapper.UserCaptchaMapper;
+import com.github.ksewen.ganyu.service.CaptchaTypeService;
 import com.github.ksewen.ganyu.service.MailService;
 import com.github.ksewen.ganyu.service.UserService;
 
@@ -35,7 +36,7 @@ class CaptchaServiceImplTest {
     private CaptchaHelpers captchaHelpers;
 
     @MockBean
-    private CaptchaTypeMapper captchaTypeMapper;
+    private CaptchaTypeService captchaTypeService;
 
     @MockBean
     private UserService userService;
@@ -55,7 +56,7 @@ class CaptchaServiceImplTest {
         when(this.userCaptchaMapper.findFirstByUserIdAndCaptchaTypeIdOrderByExpirationDesc(this.userId,
                 this.captchaTypeId))
                         .thenReturn(Optional.of(UserCaptcha.builder().id(1L).userId(this.userId)
-                                .captchaTypeId(this.captchaTypeId).code(this.code).build()));
+                                .captchaTypeId(this.captchaTypeId).code(this.code).expiration(LocalDateTime.now().plusSeconds(600)).build()));
         boolean actual = this.captchaService.check(this.userId, this.code, this.captchaTypeId);
         assertThat(actual).isTrue();
     }
@@ -71,13 +72,21 @@ class CaptchaServiceImplTest {
     }
 
     @Test
+    void checkWithExpiredCaptcha() {
+        when(this.userCaptchaMapper.findFirstByUserIdAndCaptchaTypeIdOrderByExpirationDesc(this.userId,
+                this.captchaTypeId))
+                .thenReturn(Optional.of(UserCaptcha.builder().id(1L).userId(this.userId)
+                        .captchaTypeId(this.captchaTypeId).code(this.code).expiration(LocalDateTime.now().minusSeconds(1)).build()));
+        boolean actual = this.captchaService.check(userId, this.code, captchaTypeId);
+        assertThat(actual).isFalse();
+    }
+
+    @Test
     void checkWithInvalidCaptcha() {
         when(this.userCaptchaMapper.findFirstByUserIdAndCaptchaTypeIdOrderByExpirationDesc(anyLong(), anyLong()))
                 .thenReturn(Optional.of(UserCaptcha.builder().id(1L).userId(this.userId)
                         .captchaTypeId(this.captchaTypeId).code("111111").build()));
-        CommonException exception = Assertions.assertThrows(CommonException.class,
-                () -> this.captchaService.check(userId, this.code, captchaTypeId));
-        assertThat(exception).matches(e -> ResultCode.CAPTCHA_INVALID.equals(e.getCode()))
-                .matches(e -> ResultCode.CAPTCHA_INVALID.getMessage().equals(e.getMessage()));
+        boolean actual = this.captchaService.check(userId, this.code, captchaTypeId);
+        assertThat(actual).isFalse();
     }
 }

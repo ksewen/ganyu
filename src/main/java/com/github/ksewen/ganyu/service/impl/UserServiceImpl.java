@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -45,8 +44,6 @@ public class UserServiceImpl implements UserService {
 
     private final BeanMapperHelpers beanMapperHelpers;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Override
     public Optional<User> findByUsername(String username) {
         return this.userMapper.findByUsername(username);
@@ -55,6 +52,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findById(long userId) {
         return this.userMapper.findById(userId);
+    }
+
+    @Override
+    public User saveAndFlush(User user) {
+        return this.userMapper.saveAndFlush(user);
+
     }
 
     @Override
@@ -95,23 +98,10 @@ public class UserServiceImpl implements UserService {
             }
         }
         Optional<User> exist = this.userMapper.findById(userModifyModel.getId());
-        User insert = exist
-                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND, ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE));
+        User insert = exist.orElseThrow(
+                () -> new CommonException(ResultCode.NOT_FOUND, ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE));
         BeanUtils.copyProperties(userModifyModel, insert, this.beanMapperHelpers.getNullPropertyNames(userModifyModel));
         return this.userMapper.saveAndFlush(insert);
-    }
-
-    @Override
-    public User modifyPassword(String exist, String modify, long userId) {
-        User user = this.userMapper.findById(userId).map(u -> {
-            boolean matches = this.passwordEncoder.matches(exist, u.getPassword());
-            if (!matches) {
-                throw new CommonException(ResultCode.ACCESS_DENIED, "invalid old password");
-            }
-            return u;
-        }).orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND, ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE));
-        user.setPassword(this.passwordEncoder.encode(modify));
-        return this.userMapper.saveAndFlush(user);
     }
 
 }

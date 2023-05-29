@@ -1,8 +1,6 @@
 package com.github.ksewen.ganyu.domain;
 
-import java.util.Date;
-
-import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,8 +33,7 @@ public class UserCaptcha {
     @Column(nullable = false, columnDefinition = "VARCHAR(10)")
     private String code;
 
-    @Column(columnDefinition = "DATETIME")
-    @CreationTimestamp
-    private Date expiration;
+    @Column(nullable = false, columnDefinition = "DATETIME")
+    private LocalDateTime expiration;
 
 }

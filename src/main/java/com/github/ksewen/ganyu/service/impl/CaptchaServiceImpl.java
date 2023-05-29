@@ -1,6 +1,7 @@
 package com.github.ksewen.ganyu.service.impl;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.slf4j.helpers.MessageFormatter;
 import org.springframework.stereotype.Service;
@@ -9,14 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.constant.MailConstants;
+import com.github.ksewen.ganyu.constant.SystemConstants;
 import com.github.ksewen.ganyu.domain.CaptchaType;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.domain.UserCaptcha;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.CaptchaHelpers;
-import com.github.ksewen.ganyu.mapper.CaptchaTypeMapper;
 import com.github.ksewen.ganyu.mapper.UserCaptchaMapper;
 import com.github.ksewen.ganyu.service.CaptchaService;
+import com.github.ksewen.ganyu.service.CaptchaTypeService;
 import com.github.ksewen.ganyu.service.MailService;
 import com.github.ksewen.ganyu.service.UserService;
 
@@ -32,7 +34,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     private final CaptchaHelpers captchaHelpers;
 
-    private final CaptchaTypeMapper captchaTypeMapper;
+    private final CaptchaTypeService captchaTypeService;
 
     private final UserCaptchaMapper userCaptchaMapper;
 
@@ -47,15 +49,16 @@ public class CaptchaServiceImpl implements CaptchaService {
     public void apply(Long userId, Long typeId) {
         User user = this.userService.findById(userId).orElseThrow(
                 () -> new CommonException(ResultCode.NOT_FOUND, ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE));
-        CaptchaType type = this.captchaTypeMapper.findById(typeId)
+        CaptchaType type = this.captchaTypeService.findById(typeId)
                 .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND, "can not find the captcha type"));
+        LocalDateTime expiration = LocalDateTime.now().plusSeconds(this.EXPIRE_TIME);
         UserCaptcha record = UserCaptcha.builder().userId(userId).captchaTypeId(type.getId())
-                .code(this.captchaHelpers.generateSimple())
-                .expiration(new Date(new Date().getTime() + this.EXPIRE_TIME)).build();
+                .code(this.captchaHelpers.generateSimple()).expiration(expiration).build();
         this.userCaptchaMapper.deleteByUserIdAndCaptchaTypeId(userId, type.getId());
         this.userCaptchaMapper.saveAndFlush(record);
         String text = MessageFormatter.basicArrayFormat(MailConstants.CAPTCHA_TEXT_TEMPLATE,
-                new Object[] { record.getCode(), type.getName(), this.EXPIRE_TIME });
+                new Object[] { record.getCode(), type.getName(),
+                        expiration.format(DateTimeFormatter.ofPattern(SystemConstants.GLOBAL_DATETIME_FORMAT)) });
         this.mailService.sendSimple(user.getEmail(), MailConstants.CAPTCHA_SUBJECT, text);
     }
 
@@ -64,9 +67,7 @@ public class CaptchaServiceImpl implements CaptchaService {
         UserCaptcha userCaptcha = this.userCaptchaMapper
                 .findFirstByUserIdAndCaptchaTypeIdOrderByExpirationDesc(userId, typeId).orElseThrow(
                         () -> new CommonException(ResultCode.CAPTCHA_INVALID, "given user not has any valid captcha"));
-        if (!userCaptcha.getCode().equals(code)) {
-            throw new CommonException(ResultCode.CAPTCHA_INVALID);
-        }
-        return true;
+        return userCaptcha.getCode().equals(code) && LocalDateTime.now().isBefore(userCaptcha.getExpiration());
     }
+
 }

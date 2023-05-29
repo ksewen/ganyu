@@ -10,4 +10,5 @@ public interface CaptchaService {
 
     boolean check(Long userId, String code, Long typeId);
 
+
 }

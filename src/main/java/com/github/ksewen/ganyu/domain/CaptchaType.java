@@ -1,6 +1,6 @@
 package com.github.ksewen.ganyu.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
@@ -40,7 +40,7 @@ public class CaptchaType {
 
     @Column(columnDefinition = "DATETIME")
     @CreationTimestamp
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @Column(columnDefinition = "VARCHAR(64)")
     @CreatedBy
@@ -48,7 +48,7 @@ public class CaptchaType {
 
     @Column(columnDefinition = "DATETIME")
     @UpdateTimestamp
-    private Date modifyTime;
+    private LocalDateTime modifyTime;
 
     @Column(columnDefinition = "VARCHAR(64)")
     @LastModifiedBy
