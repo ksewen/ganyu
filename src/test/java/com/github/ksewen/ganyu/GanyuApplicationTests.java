@@ -1,13 +1,10 @@
 package com.github.ksewen.ganyu;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootTest
-class GanyuApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
+@EnableWebMvc
+public class GanyuApplicationTests {
 
 }

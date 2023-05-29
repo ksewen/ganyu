@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testDb;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE,USER
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    property-naming-strategy: LOWER_CAMEL_CASE
