@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.github.ksewen.ganyu.domain.BusinessType;
@@ -29,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin/business-type")
 @SecurityRequirement(name = "jwt-auth")
 @RequiredArgsConstructor
+@Validated
 public class AdminBusinessTypeController implements LoggingController {
 
     private final BusinessTypeService businessTypeService;
@@ -55,11 +57,12 @@ public class AdminBusinessTypeController implements LoggingController {
 
     @Operation(summary = "list all business type")
     @GetMapping("/list")
-    public PageResult<List<BusinessTypeInfoResponse>> list(@RequestParam @NotNull(message = "{page.index.null}") Integer index,
-                                                           @RequestParam @NotNull(message = "{page.count.null}") Integer count) {
+    public PageResult<List<BusinessTypeInfoResponse>> list(@RequestParam(required = false) @NotNull(message = "{page.index.null}") Integer index,
+                                                           @RequestParam(required = false) @NotNull(message = "{page.count.null}") Integer count) {
         Page<BusinessType> page = this.businessTypeService.findAll(index, count);
         return PageResult.success(
-                page.getContent().stream().map(x -> BusinessTypeInfoResponse.builder().id(x.getId()).name(x.getName()).build())
+                page.getContent().stream()
+                        .map(x -> BusinessTypeInfoResponse.builder().id(x.getId()).name(x.getName()).build())
                         .collect(Collectors.toList()),
                 page.getPageable().getPageNumber(), page.getPageable().getPageSize(), page.getTotalElements());
     }

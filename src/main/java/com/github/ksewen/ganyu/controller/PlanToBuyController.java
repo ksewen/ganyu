@@ -1,14 +1,16 @@
 package com.github.ksewen.ganyu.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.github.ksewen.ganyu.domain.PlanToBuy;
 import com.github.ksewen.ganyu.dto.request.PlanToBuyRequest;
 import com.github.ksewen.ganyu.dto.response.PlanToBuyResponse;
+import com.github.ksewen.ganyu.dto.response.base.PageResult;
 import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.helper.BusinessHelpers;
@@ -19,6 +21,7 @@ import com.github.ksewen.ganyu.service.PlanToBuyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -52,6 +55,26 @@ public class PlanToBuyController implements LoggingController {
             response.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(save.getBusinessType()));
         }
         return Result.success(response);
+    }
+
+    @Operation(summary = "list all the things want to buy")
+    @GetMapping("/list")
+    public PageResult<List<PlanToBuyResponse>> list(@RequestParam(required = false) @NotNull(message = "{page.index.null}") Integer index,
+                                                    @RequestParam(required = false) @NotNull(message = "{page.count.null}") Integer count) {
+        Page<PlanToBuy> page = this.planToBuyService.findAll(index, count);
+        return PageResult.success(
+                page.getContent().stream()
+                        .map(x -> {
+                            PlanToBuyResponse item = PlanToBuyResponse.builder().id(x.getId()).userId(x.getUserId())
+                                    .shareFrom(x.getShareFrom()).assigned(x.getAssigned()).name(x.getName())
+                                    .description(x.getDescription()).imageUrl(x.getImageUrl()).build();
+                            if (StringUtils.hasLength(x.getBusinessType())) {
+                                item.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(x.getBusinessType()));
+                            }
+                            return item;
+                        })
+                        .collect(Collectors.toList()),
+                page.getPageable().getPageNumber(), page.getPageable().getPageSize(), page.getTotalElements());
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.github.ksewen.ganyu.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.ksewen.ganyu.domain.BusinessType;
@@ -33,8 +32,7 @@ public class BusinessTypeImpl implements BusinessTypeService {
 
     @Override
     public Page<BusinessType> findAll(int index, int count) {
-        Pageable pageable = PageRequest.of(index, count);
-        return this.businessTypeMapper.findAll(pageable);
+        return this.businessTypeMapper.findAll(PageRequest.of(index, count));
     }
 
 
