@@ -61,7 +61,7 @@ public class PlanToBuyController implements LoggingController {
     @GetMapping("/list")
     public PageResult<List<PlanToBuyResponse>> list(@RequestParam(required = false) @NotNull(message = "{page.index.null}") Integer index,
                                                     @RequestParam(required = false) @NotNull(message = "{page.count.null}") Integer count) {
-        Page<PlanToBuy> page = this.planToBuyService.findAll(index, count);
+        Page<PlanToBuy> page = this.planToBuyService.findAllByUserId(this.authentication.getUserId(), index, count);
         return PageResult.success(page.getContent().stream().map(x -> {
             PlanToBuyResponse item = PlanToBuyResponse.builder().id(x.getId()).userId(x.getUserId()).brand(x.getBrand())
                     .shareFrom(x.getShareFrom()).assigned(x.getAssigned()).name(x.getName())

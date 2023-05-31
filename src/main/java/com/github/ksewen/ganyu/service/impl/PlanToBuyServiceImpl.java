@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.github.ksewen.ganyu.domain.PlanToBuy;
@@ -39,6 +40,12 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
     @Override
     public Page<PlanToBuy> findAll(int index, int count) {
         return this.planToBuyMapper.findAll(PageRequest.of(index, count));
+    }
+
+    @Override
+    public Page<PlanToBuy> findAllByUserId(long userId, int index, int count) {
+        return this.planToBuyMapper.findAllByUserId(userId,
+                PageRequest.of(index, count, Sort.by("createTime").descending()));
     }
 
 }

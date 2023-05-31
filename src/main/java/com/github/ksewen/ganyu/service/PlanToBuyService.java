@@ -15,4 +15,6 @@ public interface PlanToBuyService {
 
     Page<PlanToBuy> findAll(int index, int count);
 
+    Page<PlanToBuy> findAllByUserId(long userId, int index, int count);
+
 }
