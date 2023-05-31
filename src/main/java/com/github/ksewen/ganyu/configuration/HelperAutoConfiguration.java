@@ -39,4 +39,9 @@ public class HelperAutoConfiguration {
     public CaptchaHelpers captchaHelpers() {
         return new CaptchaHelpers();
     }
+
+    @Bean
+    public BusinessHelpers businessHelpers() {
+        return new BusinessHelpers();
+    }
 }

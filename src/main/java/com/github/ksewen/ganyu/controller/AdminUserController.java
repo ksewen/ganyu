@@ -23,12 +23,12 @@ import lombok.RequiredArgsConstructor;
  * @date 10.05.2023 12:24
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/user")
 @SecurityRequirement(name = "jwt-auth")
 @RequiredArgsConstructor
-public class AdminController implements LoggingController {
+public class AdminUserController implements LoggingController {
 
-    private final String NAME = "administrator";
+    private final String NAME = "administrator user management";
 
     private final AdminService adminService;
 

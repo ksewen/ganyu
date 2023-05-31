@@ -15,10 +15,9 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class PageResult<T> extends Result<T> {
 
-    private Integer currentIndex;
-    private Integer pageCount;
+    private Integer index;
+    private Integer count;
     private Long total;
-    private boolean hasNext;
 
     public PageResult() {
         super();
@@ -32,39 +31,39 @@ public class PageResult<T> extends Result<T> {
         super(errorCode, message);
     }
 
-    public PageResult(Integer currentIndex, Integer pageCount, Long total) {
+    public PageResult(Integer index, Integer count, Long total) {
         super();
-        this.currentIndex = currentIndex;
-        this.pageCount = pageCount;
+        this.index = index;
+        this.count = count;
         this.total = total;
     }
 
-    public PageResult(ResultCode errorCode, Integer currentIndex, Integer pageCount, Long total) {
+    public PageResult(ResultCode errorCode, Integer index, Integer count, Long total) {
         super(errorCode);
-        this.currentIndex = currentIndex;
-        this.pageCount = pageCount;
+        this.index = index;
+        this.count = count;
         this.total = total;
     }
 
-    public PageResult(T data, Integer currentIndex, Integer pageCount, Long total) {
+    public PageResult(T data, Integer index, Integer count, Long total) {
         super(data);
-        this.currentIndex = currentIndex;
-        this.pageCount = pageCount;
+        this.index = index;
+        this.count = count;
         this.total = total;
     }
 
-    public PageResult(ResultCode errorCode, String message, Integer currentIndex, Integer pageCount, Long total) {
+    public PageResult(ResultCode errorCode, String message, Integer index, Integer count, Long total) {
         super(errorCode, message);
-        this.currentIndex = currentIndex;
-        this.pageCount = pageCount;
+        this.index = index;
+        this.count = count;
         this.total = total;
     }
 
-    public PageResult(ResultCode errorCode, String message, T data, Integer currentIndex, Integer pageCount,
+    public PageResult(ResultCode errorCode, String message, T data, Integer index, Integer count,
                       Long total) {
         super(errorCode, message, data);
-        this.currentIndex = currentIndex;
-        this.pageCount = pageCount;
+        this.index = index;
+        this.count = count;
         this.total = total;
     }
 
