@@ -20,6 +20,8 @@ public class PlanToBuyResponse {
 
     private Long userId;
 
+    private String brand;
+
     private Long shareFrom;
 
     private Boolean assigned;

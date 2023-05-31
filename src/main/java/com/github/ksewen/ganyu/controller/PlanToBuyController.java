@@ -62,19 +62,16 @@ public class PlanToBuyController implements LoggingController {
     public PageResult<List<PlanToBuyResponse>> list(@RequestParam(required = false) @NotNull(message = "{page.index.null}") Integer index,
                                                     @RequestParam(required = false) @NotNull(message = "{page.count.null}") Integer count) {
         Page<PlanToBuy> page = this.planToBuyService.findAll(index, count);
-        return PageResult.success(
-                page.getContent().stream()
-                        .map(x -> {
-                            PlanToBuyResponse item = PlanToBuyResponse.builder().id(x.getId()).userId(x.getUserId())
-                                    .shareFrom(x.getShareFrom()).assigned(x.getAssigned()).name(x.getName())
-                                    .description(x.getDescription()).imageUrl(x.getImageUrl()).build();
-                            if (StringUtils.hasLength(x.getBusinessType())) {
-                                item.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(x.getBusinessType()));
-                            }
-                            return item;
-                        })
-                        .collect(Collectors.toList()),
-                page.getPageable().getPageNumber(), page.getPageable().getPageSize(), page.getTotalElements());
+        return PageResult.success(page.getContent().stream().map(x -> {
+            PlanToBuyResponse item = PlanToBuyResponse.builder().id(x.getId()).userId(x.getUserId()).brand(x.getBrand())
+                    .shareFrom(x.getShareFrom()).assigned(x.getAssigned()).name(x.getName())
+                    .description(x.getDescription()).imageUrl(x.getImageUrl()).build();
+            if (StringUtils.hasLength(x.getBusinessType())) {
+                item.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(x.getBusinessType()));
+            }
+            return item;
+        }).collect(Collectors.toList()), page.getPageable().getPageNumber(), page.getPageable().getPageSize(),
+                page.getTotalElements());
     }
 
     @Override

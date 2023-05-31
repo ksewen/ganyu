@@ -2,13 +2,15 @@ package com.github.ksewen.ganyu.domain;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.*;
 
 /**
@@ -22,8 +24,6 @@ import lombok.*;
 @Builder
 @ToString
 @Entity
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "plan_to_buy")
 @EntityListeners(value = AuditingEntityListener.class)
 @SQLDelete(sql = "update plan_to_buy set deleted = true where id = ?")
@@ -38,8 +38,8 @@ public class PlanToBuy {
     @Column(nullable = false, columnDefinition = "BIGINT(20)")
     private Long userId;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(128) default 'UNSET'")
-    private String brand;
+    @Column(columnDefinition = "VARCHAR(128)")
+    private String brand = "UNSET";
 
     @Column(columnDefinition = "BIGINT(20)")
     private Long shareFrom;
