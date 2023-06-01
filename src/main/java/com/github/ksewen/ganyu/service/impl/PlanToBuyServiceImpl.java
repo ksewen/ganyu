@@ -1,18 +1,25 @@
 package com.github.ksewen.ganyu.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.domain.PlanToBuy;
 import com.github.ksewen.ganyu.helper.BusinessHelpers;
+import com.github.ksewen.ganyu.helper.SpecificationHelpers;
 import com.github.ksewen.ganyu.mapper.PlanToBuyMapper;
-import com.github.ksewen.ganyu.model.PlanToBuyModel;
+import com.github.ksewen.ganyu.model.PlanToBuyInsertModel;
+import com.github.ksewen.ganyu.model.PlanToBuySearchModel;
 import com.github.ksewen.ganyu.service.PlanToBuyService;
 
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -27,8 +34,10 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
 
     private final BusinessHelpers businessHelpers;
 
+    private final SpecificationHelpers specificationHelpers;
+
     @Override
-    public PlanToBuy save(PlanToBuyModel model) {
+    public PlanToBuy save(PlanToBuyInsertModel model) {
         PlanToBuy insert = PlanToBuy.builder().userId(model.getUserId()).name(model.getName()).brand(model.getBrand())
                 .description(model.getDescription()).imageUrl(model.getImageUrl()).build();
         String businessType = Optional.ofNullable(model.getBusinessType())
@@ -38,14 +47,34 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
     }
 
     @Override
-    public Page<PlanToBuy> findAll(int index, int count) {
-        return this.planToBuyMapper.findAll(PageRequest.of(index, count));
-    }
+    public Page<PlanToBuy> findAByConditions(PlanToBuySearchModel model, int index, int count) {
+        return this.planToBuyMapper.findAll((Specification<PlanToBuy>) (root, query, criteriaBuilder) -> {
+            List<Predicate> list = new ArrayList<>();
+            if (StringUtils.hasLength(model.getBrand())) {
+                list.add(criteriaBuilder.like(root.get("brand").as(String.class),
+                        this.specificationHelpers.generateFullFuzzyKeyword(model.getBrand())));
+            }
+            if (model.getUserId() != null) {
+                list.add(criteriaBuilder.equal(root.get("userId").as(Long.class), model.getUserId()));
+            }
+            if (model.getShareFrom() != null) {
+                list.add(criteriaBuilder.equal(root.get("shareFrom").as(Long.class), model.getShareFrom()));
+            }
+            if (model.getAssigned() != null) {
+                list.add(criteriaBuilder.equal(root.get("assigned").as(Boolean.class), model.getAssigned()));
+            }
 
-    @Override
-    public Page<PlanToBuy> findAllByUserId(long userId, int index, int count) {
-        return this.planToBuyMapper.findAllByUserId(userId,
-                PageRequest.of(index, count, Sort.by("createTime").descending()));
+            if (StringUtils.hasLength(model.getName())) {
+                list.add(criteriaBuilder.equal(root.get("name").as(String.class), model.getName()));
+            }
+            if (StringUtils.hasLength(model.getBusinessType())) {
+                list.add(criteriaBuilder.like(root.get("businessType").as(String.class),
+                        this.specificationHelpers.generateFullFuzzyKeyword(model.getBusinessType())));
+            }
+            Predicate[] array = new Predicate[list.size()];
+            Predicate[] predicates = list.toArray(array);
+            return criteriaBuilder.and(predicates);
+        }, PageRequest.of(index, count, Sort.by("createTime").descending()));
     }
 
 }

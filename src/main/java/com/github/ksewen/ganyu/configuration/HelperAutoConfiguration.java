@@ -44,4 +44,9 @@ public class HelperAutoConfiguration {
     public BusinessHelpers businessHelpers() {
         return new BusinessHelpers();
     }
+
+    @Bean
+    public SpecificationHelpers specificationHelpers() {
+        return new SpecificationHelpers();
+    }
 }

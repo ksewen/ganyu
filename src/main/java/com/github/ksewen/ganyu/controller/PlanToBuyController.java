@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import com.github.ksewen.ganyu.constant.ParameterConstants;
 import com.github.ksewen.ganyu.domain.PlanToBuy;
 import com.github.ksewen.ganyu.dto.request.PlanToBuyRequest;
 import com.github.ksewen.ganyu.dto.response.PlanToBuyResponse;
@@ -14,14 +15,14 @@ import com.github.ksewen.ganyu.dto.response.base.PageResult;
 import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.helper.BusinessHelpers;
-import com.github.ksewen.ganyu.model.PlanToBuyModel;
+import com.github.ksewen.ganyu.model.PlanToBuyInsertModel;
+import com.github.ksewen.ganyu.model.PlanToBuySearchModel;
 import com.github.ksewen.ganyu.security.Authentication;
 import com.github.ksewen.ganyu.service.PlanToBuyService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -47,7 +48,8 @@ public class PlanToBuyController implements LoggingController {
     @Operation(summary = "add something to buy")
     @PostMapping("/add")
     public Result<PlanToBuyResponse> add(@Valid @RequestBody PlanToBuyRequest request) {
-        PlanToBuyModel model = this.beanMapperHelpers.createAndCopyProperties(request, PlanToBuyModel.class);
+        PlanToBuyInsertModel model = this.beanMapperHelpers.createAndCopyProperties(request,
+                PlanToBuyInsertModel.class);
         model.setUserId(this.authentication.getUserId());
         PlanToBuy save = this.planToBuyService.save(model);
         PlanToBuyResponse response = this.beanMapperHelpers.createAndCopyProperties(save, PlanToBuyResponse.class);
@@ -59,9 +61,16 @@ public class PlanToBuyController implements LoggingController {
 
     @Operation(summary = "list all the things want to buy")
     @GetMapping("/list")
-    public PageResult<List<PlanToBuyResponse>> list(@RequestParam(required = false) @NotNull(message = "{page.index.null}") Integer index,
-                                                    @RequestParam(required = false) @NotNull(message = "{page.count.null}") Integer count) {
-        Page<PlanToBuy> page = this.planToBuyService.findAllByUserId(this.authentication.getUserId(), index, count);
+    public PageResult<List<PlanToBuyResponse>> list(@RequestParam(required = false) String name,
+                                                    @RequestParam(required = false) String brand,
+                                                    @RequestParam(required = false) Long shareFrom,
+                                                    @RequestParam(required = false) Boolean assigned,
+                                                    @RequestParam(required = false) String businessType,
+                                                    @RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_INDEX_VALUE) Integer index,
+                                                    @RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_COUNT_VALUE) Integer count) {
+        PlanToBuySearchModel model = PlanToBuySearchModel.builder().userId(this.authentication.getUserId()).name(name)
+                .brand(brand).shareFrom(shareFrom).assigned(assigned).businessType(businessType).build();
+        Page<PlanToBuy> page = this.planToBuyService.findAByConditions(model, index, count);
         return PageResult.success(page.getContent().stream().map(x -> {
             PlanToBuyResponse item = PlanToBuyResponse.builder().id(x.getId()).userId(x.getUserId()).brand(x.getBrand())
                     .shareFrom(x.getShareFrom()).assigned(x.getAssigned()).name(x.getName())

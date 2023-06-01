@@ -3,7 +3,8 @@ package com.github.ksewen.ganyu.service;
 import org.springframework.data.domain.Page;
 
 import com.github.ksewen.ganyu.domain.PlanToBuy;
-import com.github.ksewen.ganyu.model.PlanToBuyModel;
+import com.github.ksewen.ganyu.model.PlanToBuyInsertModel;
+import com.github.ksewen.ganyu.model.PlanToBuySearchModel;
 
 /**
  * @author ksewen
@@ -11,10 +12,8 @@ import com.github.ksewen.ganyu.model.PlanToBuyModel;
  */
 public interface PlanToBuyService {
 
-    PlanToBuy save(PlanToBuyModel model);
+    PlanToBuy save(PlanToBuyInsertModel model);
 
-    Page<PlanToBuy> findAll(int index, int count);
-
-    Page<PlanToBuy> findAllByUserId(long userId, int index, int count);
+    Page<PlanToBuy> findAByConditions(PlanToBuySearchModel model, int index, int count);
 
 }

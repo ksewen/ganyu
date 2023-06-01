@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import com.github.ksewen.ganyu.constant.ParameterConstants;
 import com.github.ksewen.ganyu.domain.BusinessType;
 import com.github.ksewen.ganyu.dto.request.BusinessTypeAddRequest;
 import com.github.ksewen.ganyu.dto.response.BusinessTypeInfoResponse;
@@ -57,8 +58,8 @@ public class AdminBusinessTypeController implements LoggingController {
 
     @Operation(summary = "list all business type")
     @GetMapping("/list")
-    public PageResult<List<BusinessTypeInfoResponse>> list(@RequestParam(required = false) @NotNull(message = "{page.index.null}") Integer index,
-                                                           @RequestParam(required = false) @NotNull(message = "{page.count.null}") Integer count) {
+    public PageResult<List<BusinessTypeInfoResponse>> list(@RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_INDEX_VALUE) Integer index,
+                                                           @RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_COUNT_VALUE) Integer count) {
         Page<BusinessType> page = this.businessTypeService.findAll(index, count);
         return PageResult.success(
                 page.getContent().stream()

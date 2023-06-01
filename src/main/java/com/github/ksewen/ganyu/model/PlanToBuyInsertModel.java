@@ -14,7 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PlanToBuyModel {
+public class PlanToBuyInsertModel {
 
     private Long id;
 

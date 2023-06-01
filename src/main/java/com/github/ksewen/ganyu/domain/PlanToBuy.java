@@ -41,11 +41,13 @@ public class PlanToBuy {
     @Column(columnDefinition = "VARCHAR(128)")
     private String brand = "UNSET";
 
-    @Column(columnDefinition = "BIGINT(20)")
-    private Long shareFrom;
+    @Column(nullable = false, columnDefinition = "BIGINT(20) default 0")
+    @Builder.Default
+    private Long shareFrom = 0L;
 
-    @Column(columnDefinition = "TINYINT(1)")
-    private Boolean assigned;
+    @Column(nullable = false, columnDefinition = "TINYINT(1) default 0")
+    @Builder.Default
+    private Boolean assigned = Boolean.FALSE;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(128)")
     private String name;
