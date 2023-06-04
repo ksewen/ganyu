@@ -11,6 +11,7 @@ import com.github.ksewen.ganyu.constant.ParameterConstants;
 import com.github.ksewen.ganyu.domain.PlanToBuy;
 import com.github.ksewen.ganyu.dto.request.PlanToBuyInsertRequest;
 import com.github.ksewen.ganyu.dto.request.PlanToBuyModifyRequest;
+import com.github.ksewen.ganyu.dto.request.PlanToBuyShareRequest;
 import com.github.ksewen.ganyu.dto.response.PlanToBuyResponse;
 import com.github.ksewen.ganyu.dto.response.base.PageResult;
 import com.github.ksewen.ganyu.dto.response.base.Result;
@@ -104,6 +105,25 @@ public class PlanToBuyController implements LoggingController {
             return item;
         }).collect(Collectors.toList()), page.getPageable().getPageNumber(), page.getPageable().getPageSize(),
                 page.getTotalElements());
+    }
+
+    @Operation(summary = "show the detail of something wants to buy")
+    @GetMapping("/detail")
+    public Result<PlanToBuyResponse> detail(@RequestParam(required = false) @NotNull(message = "{plan.to.buy.id.null}") Long id) {
+        PlanToBuy record = this.planToBuyService.findById(id, this.authentication.getUserId());
+        PlanToBuyResponse response = this.beanMapperHelpers.createAndCopyProperties(record, PlanToBuyResponse.class);
+        if (StringUtils.hasLength(record.getBusinessType())) {
+            response.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(record.getBusinessType()));
+        }
+        return Result.success(response);
+    }
+
+    @Operation(summary = "share something wants to buy to other user")
+    @PostMapping("/share")
+    public Result<Boolean> share(@Valid @RequestBody PlanToBuyShareRequest request) {
+        this.planToBuyService.share(request.getId(), this.authentication.getUserId(), request.getTargetUserIds(),
+                request.getAssigned());
+        return Result.success(Boolean.TRUE);
     }
 
     @Override
