@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.*;
 
 import com.github.ksewen.ganyu.constant.ParameterConstants;
 import com.github.ksewen.ganyu.domain.PlanToBuy;
-import com.github.ksewen.ganyu.dto.request.PlanToBuyRequest;
+import com.github.ksewen.ganyu.dto.request.PlanToBuyInsertRequest;
+import com.github.ksewen.ganyu.dto.request.PlanToBuyModifyRequest;
 import com.github.ksewen.ganyu.dto.response.PlanToBuyResponse;
 import com.github.ksewen.ganyu.dto.response.base.PageResult;
 import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.helper.BusinessHelpers;
 import com.github.ksewen.ganyu.model.PlanToBuyInsertModel;
+import com.github.ksewen.ganyu.model.PlanToBuyModifyModel;
 import com.github.ksewen.ganyu.model.PlanToBuySearchModel;
 import com.github.ksewen.ganyu.security.Authentication;
 import com.github.ksewen.ganyu.service.PlanToBuyService;
@@ -23,6 +25,7 @@ import com.github.ksewen.ganyu.service.PlanToBuyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -47,7 +50,7 @@ public class PlanToBuyController implements LoggingController {
 
     @Operation(summary = "add something to buy")
     @PostMapping("/add")
-    public Result<PlanToBuyResponse> add(@Valid @RequestBody PlanToBuyRequest request) {
+    public Result<PlanToBuyResponse> add(@Valid @RequestBody PlanToBuyInsertRequest request) {
         PlanToBuyInsertModel model = this.beanMapperHelpers.createAndCopyProperties(request,
                 PlanToBuyInsertModel.class);
         model.setUserId(this.authentication.getUserId());
@@ -57,6 +60,26 @@ public class PlanToBuyController implements LoggingController {
             response.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(save.getBusinessType()));
         }
         return Result.success(response);
+    }
+
+    @Operation(summary = "modify something to buy")
+    @PostMapping("/modify")
+    public Result<PlanToBuyResponse> modify(@Valid @RequestBody PlanToBuyModifyRequest request) {
+        PlanToBuyModifyModel model = this.beanMapperHelpers.createAndCopyProperties(request,
+                PlanToBuyModifyModel.class);
+        PlanToBuy modify = this.planToBuyService.modify(model, this.authentication.getUserId());
+        PlanToBuyResponse response = this.beanMapperHelpers.createAndCopyProperties(modify, PlanToBuyResponse.class);
+        if (StringUtils.hasLength(modify.getBusinessType())) {
+            response.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(modify.getBusinessType()));
+        }
+        return Result.success(response);
+    }
+
+    @Operation(summary = "delete something to buy")
+    @PostMapping("/delete")
+    public Result<Boolean> delete(@RequestParam(required = false) @NotNull(message = "{plan.to.buy.id.null}") Long id) {
+        this.planToBuyService.delete(id, this.authentication.getUserId());
+        return Result.success(Boolean.TRUE);
     }
 
     @Operation(summary = "list all the things want to buy")

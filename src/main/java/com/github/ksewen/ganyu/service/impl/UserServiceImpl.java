@@ -8,12 +8,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
-import com.github.ksewen.ganyu.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.User;
@@ -101,15 +98,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User modify(UserModifyModel userModifyModel, long operationUserId) {
-        Assert.notNull(userModifyModel.getId(), "the id of the modified user must be not blank");
         if (userModifyModel.getId() != operationUserId) {
-            List<Role> operationRoles = this.roleService.findByUserId(operationUserId);
-            boolean access = !CollectionUtils.isEmpty(operationRoles) && operationRoles.stream()
-                    .anyMatch(r -> AuthenticationConstants.ADMIN_ROLE_NAME.equals(r.getName()));
-            if (!access) {
-                throw new CommonException(ResultCode.ACCESS_DENIED,
-                        "only administrator can edit other user information");
-            }
+            this.roleService.checkAdministrator(operationUserId);
         }
         Optional<User> exist = this.userMapper.findById(userModifyModel.getId());
         User insert = exist.orElseThrow(

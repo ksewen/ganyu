@@ -1,12 +1,13 @@
-package com.github.ksewen.ganyu.model;
+package com.github.ksewen.ganyu.dto.request;
 
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 /**
  * @author ksewen
- * @date 31.05.2023 13:59
+ * @date 03.06.2023 13:33
  */
 @Getter
 @Setter
@@ -14,15 +15,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PlanToBuyInsertModel {
+public class PlanToBuyModifyRequest {
+
+    @NotNull(message = "{plan.to.buy.id.null}")
+    private Long id;
 
     private String brand;
-
-    private Long userId;
-
-    private Long shareFrom;
-
-    private Boolean assigned;
 
     private String name;
 
@@ -31,4 +29,5 @@ public class PlanToBuyInsertModel {
     private String imageUrl;
 
     private List<String> businessType;
+
 }

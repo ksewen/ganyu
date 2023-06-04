@@ -14,7 +14,7 @@ import lombok.*;
 @ToString
 public class UserModifyModel {
 
-    private Long id;
+    private long id;
 
     private String nickname;
 

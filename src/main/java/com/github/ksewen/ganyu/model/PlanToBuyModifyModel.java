@@ -6,7 +6,7 @@ import lombok.*;
 
 /**
  * @author ksewen
- * @date 31.05.2023 13:59
+ * @date 03.06.2023 13:32
  */
 @Getter
 @Setter
@@ -14,15 +14,11 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PlanToBuyInsertModel {
+public class PlanToBuyModifyModel {
+
+    private long id;
 
     private String brand;
-
-    private Long userId;
-
-    private Long shareFrom;
-
-    private Boolean assigned;
 
     private String name;
 
@@ -31,4 +27,5 @@ public class PlanToBuyInsertModel {
     private String imageUrl;
 
     private List<String> businessType;
+
 }

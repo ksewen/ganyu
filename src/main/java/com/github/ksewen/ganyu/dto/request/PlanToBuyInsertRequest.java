@@ -15,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PlanToBuyRequest {
+public class PlanToBuyInsertRequest {
 
     @NotBlank(message = "{plan.to.buy.name.null}")
     private String name;

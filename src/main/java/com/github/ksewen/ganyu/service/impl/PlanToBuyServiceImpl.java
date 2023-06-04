@@ -4,20 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.PlanToBuy;
+import com.github.ksewen.ganyu.enums.ResultCode;
+import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.helper.BusinessHelpers;
 import com.github.ksewen.ganyu.helper.SpecificationHelpers;
 import com.github.ksewen.ganyu.mapper.PlanToBuyMapper;
 import com.github.ksewen.ganyu.model.PlanToBuyInsertModel;
+import com.github.ksewen.ganyu.model.PlanToBuyModifyModel;
 import com.github.ksewen.ganyu.model.PlanToBuySearchModel;
 import com.github.ksewen.ganyu.service.PlanToBuyService;
+import com.github.ksewen.ganyu.service.RoleService;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +42,9 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
     private final BusinessHelpers businessHelpers;
 
     private final SpecificationHelpers specificationHelpers;
+
+    private final BeanMapperHelpers beanMapperHelpers;
+    private final RoleService roleService;
 
     @Override
     public PlanToBuy save(PlanToBuyInsertModel model) {
@@ -75,6 +85,30 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
             Predicate[] predicates = list.toArray(array);
             return criteriaBuilder.and(predicates);
         }, PageRequest.of(index, count, Sort.by("createTime").descending()));
+    }
+
+    @Override
+    public PlanToBuy modify(PlanToBuyModifyModel model, long operationUserId) {
+        PlanToBuy insert = this.planToBuyMapper.findById(model.getId())
+                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
+        if (insert.getUserId() != operationUserId) {
+            this.roleService.checkAdministrator(operationUserId);
+        }
+        BeanUtils.copyProperties(model, insert, this.beanMapperHelpers.getNullPropertyNames(model));
+        if (!CollectionUtils.isEmpty(model.getBusinessType())) {
+            insert.setBusinessType(this.businessHelpers.listToStringCommaSeparated(model.getBusinessType()));
+        }
+        return this.planToBuyMapper.saveAndFlush(insert);
+    }
+
+    @Override
+    public void delete(long id, long operationUserId) {
+        PlanToBuy record = this.planToBuyMapper.findById(id)
+                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
+        if (operationUserId != record.getUserId()) {
+            this.roleService.checkAdministrator(operationUserId);
+        }
+        this.planToBuyMapper.deleteById(id);
     }
 
 }
