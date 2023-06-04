@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.constant.AuthenticationConstants;
+import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.mapper.RoleMapper;
@@ -43,6 +44,6 @@ class RoleServiceImplTest {
         CommonException exception = Assertions.assertThrows(CommonException.class,
                 () -> this.roleService.checkAdministrator(2L));
         assertThat(exception).matches(e -> ResultCode.ACCESS_DENIED.equals(e.getCode()))
-                .matches(e -> "only administrator can edit other user information".equals(e.getMessage()));
+                .matches(e -> ErrorMessageConstants.NOT_ADMINISTRATOR_ERROR_MESSAGE.equals(e.getMessage()));
     }
 }

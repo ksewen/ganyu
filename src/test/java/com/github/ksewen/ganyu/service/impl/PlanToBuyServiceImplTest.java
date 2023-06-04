@@ -5,18 +5,17 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.util.CollectionUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
+import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.domain.PlanToBuy;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
@@ -139,6 +138,38 @@ class PlanToBuyServiceImplTest {
                 .matches(e -> ResultCode.NOT_FOUND.getMessage().equals(e.getMessage()));
         verify(this.roleService, times(0)).checkAdministrator(anyLong());
         verify(this.planToBuyMapper, times(0)).deleteById(anyLong());
+    }
+
+    @Test
+    void shareSuccess() {
+        when(this.planToBuyMapper.findById(anyLong())).thenReturn(Optional
+                .of(PlanToBuy.builder().id(1L).name(this.name).description(this.description).userId(5L).build()));
+        this.planToBuyService.share(1L, 5L, Arrays.asList(1L, 2L, 3L), false);
+        verify(this.planToBuyMapper, times(1)).saveAllAndFlush(argThat(l -> {
+            List<PlanToBuy> list = (List<PlanToBuy>) l;
+            return !CollectionUtils.isEmpty(list) && list.size() == 3 && this.name.equals(list.get(0).getName()) && this.name.equals(list.get(1).getName()) && this.name.equals(list.get(2).getName())
+                    && this.description.equals(list.get(0).getDescription()) && this.description.equals(list.get(1).getDescription()) && this.description.equals(list.get(2).getDescription())
+                    && Objects.equals(1L, list.get(0).getUserId()) && Objects.equals(2L, list.get(1).getUserId()) && Objects.equals(3L, list.get(2).getUserId());
+        }));
+    }
+
+    @Test
+    void shareTheRecordOfAnotherUser() {
+        when(this.planToBuyMapper.findById(anyLong())).thenReturn(Optional
+                .of(PlanToBuy.builder().id(1L).name(this.name).description(this.description).userId(5L).build()));
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.planToBuyService.share(1L, 1L, Arrays.asList(1L, 2L, 3L), false));
+        assertThat(exception).matches(e -> ResultCode.ACCESS_DENIED.equals(e.getCode())).matches(e -> ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE.equals(e.getMessage()));
+    }
+
+    @Test
+    void shareNotExistRecord() {
+        when(this.planToBuyMapper.findById(anyLong())).thenReturn(Optional.ofNullable(null));
+        CommonException exception = Assertions.assertThrows(CommonException.class,
+                () -> this.planToBuyService.share(1L, 1L, Arrays.asList(1L, 2L, 3L), false));
+        assertThat(exception).matches(e -> ResultCode.NOT_FOUND.equals(e.getCode()))
+                .matches(e -> ResultCode.NOT_FOUND.getMessage().equals(e.getMessage()));
+        verify(this.planToBuyMapper, times(0)).saveAllAndFlush(any());
     }
 
 }

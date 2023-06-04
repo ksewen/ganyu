@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
+import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.domain.PlanToBuy;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
@@ -54,6 +55,16 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
                 .map(list -> this.businessHelpers.listToStringCommaSeparated(list)).orElse(null);
         insert.setBusinessType(businessType);
         return this.planToBuyMapper.saveAndFlush(insert);
+    }
+
+    @Override
+    public PlanToBuy findById(Long id, long operationUserId) {
+        PlanToBuy record = this.planToBuyMapper.findById(id)
+                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
+        if (operationUserId != record.getUserId()) {
+            this.roleService.checkAdministrator(operationUserId);
+        }
+        return record;
     }
 
     @Override
@@ -109,6 +120,24 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
             this.roleService.checkAdministrator(operationUserId);
         }
         this.planToBuyMapper.deleteById(id);
+    }
+
+    @Override
+    public List<PlanToBuy> share(long id, long operationUserId, List<Long> targetUserIds, boolean assigned) {
+        PlanToBuy record = this.planToBuyMapper.findById(id)
+                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
+        if (operationUserId != record.getUserId()) {
+            throw new CommonException(ResultCode.ACCESS_DENIED, ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE);
+        }
+        List<PlanToBuy> list = new ArrayList<>();
+        for (Long targetUserId : targetUserIds) {
+            PlanToBuy item = PlanToBuy.builder().userId(targetUserId).brand(record.getBrand())
+                    .shareFrom(record.getUserId()).assigned(assigned).name(record.getName())
+                    .description(record.getDescription()).imageUrl(record.getImageUrl())
+                    .businessType(record.getBusinessType()).build();
+            list.add(item);
+        }
+        return this.planToBuyMapper.saveAllAndFlush(list);
     }
 
 }

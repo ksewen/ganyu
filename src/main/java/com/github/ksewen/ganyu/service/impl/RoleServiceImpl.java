@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.constant.AuthenticationConstants;
+import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.mapper.RoleMapper;
@@ -40,11 +41,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void checkAdministrator(long userId) {
         List<Role> operationRoles = this.findByUserId(userId);
-        boolean access = !CollectionUtils.isEmpty(operationRoles) && operationRoles.stream()
-                .anyMatch(r -> AuthenticationConstants.ADMIN_ROLE_NAME.equals(r.getName()));
+        boolean access = !CollectionUtils.isEmpty(operationRoles)
+                && operationRoles.stream().anyMatch(r -> AuthenticationConstants.ADMIN_ROLE_NAME.equals(r.getName()));
         if (!access) {
-            throw new CommonException(ResultCode.ACCESS_DENIED,
-                    "only administrator can edit other user information");
+            throw new CommonException(ResultCode.ACCESS_DENIED, ErrorMessageConstants.NOT_ADMINISTRATOR_ERROR_MESSAGE);
         }
     }
 }
