@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
-import com.github.ksewen.ganyu.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.constant.ErrorMessageConstants;
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.User;
@@ -19,13 +18,13 @@ import com.github.ksewen.ganyu.domain.UserRole;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.mapper.UserMapper;
-import com.github.ksewen.ganyu.mapper.specification.UserSpecification;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.RoleService;
 import com.github.ksewen.ganyu.service.UserRoleService;
 import com.github.ksewen.ganyu.service.UserService;
 
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -63,9 +62,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User add(UserRegisterModel userRegisterModel, List<Role> roles) {
-        UserSpecification specification = new UserSpecification(null, userRegisterModel.getUsername(), null,
-                userRegisterModel.getEmail(), userRegisterModel.getMobile(), false);
-        Optional<User> exist = this.userMapper.findOne(specification);
+        Optional<User> exist = this.userMapper.findOne((Specification<User>) (root, query, criteriaBuilder) -> {
+            List<Predicate> list = new ArrayList<>();
+            if (StringUtils.hasLength(userRegisterModel.getUsername())) {
+                list.add(criteriaBuilder.equal(root.get("username").as(String.class), userRegisterModel.getUsername()));
+            }
+            if (StringUtils.hasLength(userRegisterModel.getEmail())) {
+                list.add(criteriaBuilder.equal(root.get("email").as(String.class), userRegisterModel.getEmail()));
+            }
+            if (StringUtils.hasLength(userRegisterModel.getMobile())) {
+                list.add(criteriaBuilder.equal(root.get("mobile").as(String.class), userRegisterModel.getMobile()));
+            }
+            Predicate[] array = new Predicate[list.size()];
+            Predicate[] predicates = list.toArray(array);
+            return criteriaBuilder.or(predicates);
+        });
         if (exist.isPresent()) {
             throw new CommonException(ResultCode.ALREADY_EXIST);
         }
@@ -87,15 +98,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User modify(UserModifyModel userModifyModel, long operationUserId) {
-        Assert.notNull(userModifyModel.getId(), "the id of the modified user must be not blank");
         if (userModifyModel.getId() != operationUserId) {
-            List<Role> operationRoles = this.roleService.findByUserId(operationUserId);
-            boolean access = !CollectionUtils.isEmpty(operationRoles) && operationRoles.stream()
-                    .anyMatch(r -> AuthenticationConstants.ADMIN_ROLE_NAME.equals(r.getName()));
-            if (!access) {
-                throw new CommonException(ResultCode.ACCESS_DENIED,
-                        "only administrator can edit other user information");
-            }
+            this.roleService.checkAdministrator(operationUserId);
         }
         Optional<User> exist = this.userMapper.findById(userModifyModel.getId());
         User insert = exist.orElseThrow(

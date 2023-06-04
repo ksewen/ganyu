@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 
 import com.github.ksewen.ganyu.configuration.exception.CommonException;
@@ -23,7 +24,6 @@ import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.mapper.UserMapper;
-import com.github.ksewen.ganyu.mapper.specification.UserSpecification;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.RoleService;
@@ -66,7 +66,7 @@ class UserServiceImplTest {
     void addSuccess() {
         final List<Role> roles = Arrays.asList(Role.builder().id(1L).name("ADMIN").build(),
                 Role.builder().id(2L).name("USER").build());
-        when(this.userMapper.findOne(any(UserSpecification.class))).thenReturn(Optional.ofNullable(null));
+        when(this.userMapper.findOne(any(Specification.class))).thenReturn(Optional.ofNullable(null));
         when(this.userMapper.saveAndFlush(
                 argThat(user -> this.name.equals(user.getUsername()) && this.name.equals(user.getNickname())
                         && this.email.equals(user.getEmail()) && password.equals(user.getPassword()))))
@@ -86,7 +86,7 @@ class UserServiceImplTest {
 
     @Test
     void addWithExistUser() {
-        when(this.userMapper.findOne(any(UserSpecification.class))).thenReturn(
+        when(this.userMapper.findOne(any(Specification.class))).thenReturn(
                 Optional.of(User.builder().id(1L).username(this.name).nickname(this.name).email(this.email).build()));
         CommonException exception = Assertions.assertThrows(CommonException.class,
                 () -> this.userService.add(this.generateUserRegisterModel(), null));
@@ -130,17 +130,7 @@ class UserServiceImplTest {
                 .matches(u -> this.password.equals(u.getPassword()));
         assertThat(actual.getMobile()).isNull();
         assertThat(actual.getAvatarUrl()).isNull();
-        verify(this.roleService, times(1)).findByUserId(1L);
-    }
-
-    @Test
-    void modifyAnotherWithoutAuthorization() {
-        when(this.roleService.findByUserId(anyLong()))
-                .thenReturn(Arrays.asList(Role.builder().id(2L).name(AuthenticationConstants.USER_ROLE_NAME).build()));
-        CommonException exception = Assertions.assertThrows(CommonException.class,
-                () -> this.userService.modify(this.generateUserModifyModel(), 2L));
-        assertThat(exception).matches(e -> ResultCode.ACCESS_DENIED.equals(e.getCode()))
-                .matches(e -> "only administrator can edit other user information".equals(e.getMessage()));
+        verify(this.roleService, times(1)).checkAdministrator(1L);
     }
 
     @Test

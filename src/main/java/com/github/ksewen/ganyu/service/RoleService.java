@@ -15,4 +15,6 @@ public interface RoleService {
     Role findFirstByName(String name);
     List<Role> findByNames(String... name);
 
+    void checkAdministrator(long userId);
+
 }

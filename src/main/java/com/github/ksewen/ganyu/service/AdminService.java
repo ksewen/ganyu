@@ -1,7 +1,7 @@
 package com.github.ksewen.ganyu.service;
 
 import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.model.UserRegisterModel;
+import com.github.ksewen.ganyu.model.UserModifyModel;
 
 /**
  * @author ksewen
@@ -9,6 +9,6 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
  */
 public interface AdminService {
 
-    User modify(UserRegisterModel userRegisterModel);
+    User modify(UserModifyModel userRegisterModel, long operationUserId);
 
 }

@@ -2,11 +2,10 @@ package com.github.ksewen.ganyu.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.github.ksewen.ganyu.constant.AuthenticationConstants;
 import com.github.ksewen.ganyu.domain.User;
-import com.github.ksewen.ganyu.model.UserRegisterModel;
+import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.service.AdminService;
-import com.github.ksewen.ganyu.service.AuthService;
+import com.github.ksewen.ganyu.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,10 +17,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
-    private final AuthService authService;
+    private final UserService userService;
 
     @Override
-    public User modify(UserRegisterModel userRegisterModel) {
-        return this.authService.register(userRegisterModel, AuthenticationConstants.ADMIN_ROLE_NAME);
+    public User modify(UserModifyModel userRegisterModel, long operationUserId) {
+        return this.userService.modify(userRegisterModel, operationUserId);
     }
 }

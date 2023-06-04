@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,6 +13,7 @@ import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.dto.response.base.Result;
 import com.github.ksewen.ganyu.enums.ResultCode;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,20 +24,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BasicExceptionHandler {
 
-    @ExceptionHandler(value = { MethodArgumentNotValidException.class, BindException.class })
+    @ExceptionHandler(value = { BindException.class })
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public Result handleMethodArgumentNotValidException(Exception validException) {
-        BindingResult bindingResult = null;
-        if (validException instanceof MethodArgumentNotValidException) {
-            bindingResult = ((MethodArgumentNotValidException) validException).getBindingResult();
-        } else if (validException instanceof BindException) {
-            bindingResult = ((BindException) validException).getBindingResult();
-        }
+    public Result handleBindException(BindException exception) {
+        BindingResult bindingResult = exception.getBindingResult();
         if (null == bindingResult || null == bindingResult.getFieldError()) {
             return Result.paramInvalid();
         }
         return Result.paramInvalid(bindingResult.getFieldError().getDefaultMessage());
+    }
+
+    @ExceptionHandler(value = { ConstraintViolationException.class })
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Result handleConstraintViolationException(ConstraintViolationException exception) {
+        return Result.paramInvalid(exception.getMessage());
     }
 
     @ExceptionHandler(value = BadCredentialsException.class)
@@ -56,11 +58,11 @@ public class BasicExceptionHandler {
                 : Result.systemError();
     }
 
-
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public Result handleCommonException(Exception exception) {
+        log.error("BasicExceptionHandler catch a global exception", exception);
         return Result.systemError();
     }
 
