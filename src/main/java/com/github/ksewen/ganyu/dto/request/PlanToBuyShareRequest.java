@@ -2,6 +2,9 @@ package com.github.ksewen.ganyu.dto.request;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -20,7 +23,8 @@ public class PlanToBuyShareRequest {
     @NotNull(message = "{plan.to.buy.id.null}")
     private Long id;
 
-    private List<Long> targetUserIds;
+    @NotEmpty(message = "{plan.to.buy.share.target.users.empty}")
+    private List<@Valid @NotNull(message = "{plan.to.buy.share.target.user.null}") @Min(value = 1, message = "{plan.to.buy.share.target.user.minimal}") Long> targetUserIds;
 
     private Boolean assigned = Boolean.FALSE;
 }
