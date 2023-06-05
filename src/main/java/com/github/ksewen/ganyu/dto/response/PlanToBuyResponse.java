@@ -26,6 +26,8 @@ public class PlanToBuyResponse {
 
     private Boolean assigned;
 
+    private Boolean bought;
+
     private String name;
 
     private String description;
