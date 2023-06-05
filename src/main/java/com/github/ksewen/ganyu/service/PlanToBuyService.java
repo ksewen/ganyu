@@ -25,6 +25,8 @@ public interface PlanToBuyService {
 
     void delete(long id, long operationUserId);
 
+    PlanToBuy markBought(long id, long operationUserId);
+
     List<PlanToBuy> share(long id, long operationUserId, List<Long> targetUserIds, boolean assigned);
 
 }

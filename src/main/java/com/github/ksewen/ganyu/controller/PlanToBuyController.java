@@ -1,6 +1,5 @@
 package com.github.ksewen.ganyu.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,19 +90,15 @@ public class PlanToBuyController implements LoggingController {
                                                     @RequestParam(required = false) Long shareFrom,
                                                     @RequestParam(required = false) Boolean assigned,
                                                     @RequestParam(required = false) String businessType,
-                                                    @RequestParam(required = false) LocalDateTime createTimeAfter,
-                                                    @RequestParam(required = false) LocalDateTime createTimeBefore,
-                                                    @RequestParam(required = false) LocalDateTime modifyTimeAfter,
-                                                    @RequestParam(required = false) LocalDateTime modifyTimeBefore,
                                                     @RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_INDEX_VALUE) Integer index,
                                                     @RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_COUNT_VALUE) Integer count) {
         PlanToBuySearchModel model = PlanToBuySearchModel.builder().userId(this.authentication.getUserId()).name(name)
-                .brand(brand).shareFrom(shareFrom).assigned(assigned).businessType(businessType)
-                .createTimeAfter(createTimeAfter).createTimeBefore(createTimeBefore).modifyTimeAfter(modifyTimeAfter)
-                .modifyTimeBefore(modifyTimeBefore).build();
+                .brand(brand).shareFrom(shareFrom).assigned(assigned).bought(bought).businessType(businessType).build();
         Page<PlanToBuy> page = this.planToBuyService.findAByConditions(model, index, count);
         return PageResult.success(page.getContent().stream().map(x -> {
-            PlanToBuyResponse item = this.beanMapperHelpers.createAndCopyProperties(x, PlanToBuyResponse.class);
+            PlanToBuyResponse item = PlanToBuyResponse.builder().id(x.getId()).userId(x.getUserId()).brand(x.getBrand())
+                    .shareFrom(x.getShareFrom()).assigned(x.getAssigned()).bought(x.getBought()).name(x.getName())
+                    .description(x.getDescription()).imageUrl(x.getImageUrl()).build();
             if (StringUtils.hasLength(x.getBusinessType())) {
                 item.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(x.getBusinessType()));
             }
@@ -129,6 +124,17 @@ public class PlanToBuyController implements LoggingController {
         this.planToBuyService.share(request.getId(), this.authentication.getUserId(), request.getTargetUserIds(),
                 request.getAssigned());
         return Result.success(Boolean.TRUE);
+    }
+
+    @Operation(summary = "mark something has bought")
+    @PostMapping("/mark-bought")
+    public Result<PlanToBuyResponse> markBought(@RequestParam(required = false) @NotNull(message = "{plan.to.buy.id.null}") Long id) {
+        PlanToBuy record = this.planToBuyService.markBought(id, this.authentication.getUserId());
+        PlanToBuyResponse response = this.beanMapperHelpers.createAndCopyProperties(record, PlanToBuyResponse.class);
+        if (StringUtils.hasLength(record.getBusinessType())) {
+            response.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(record.getBusinessType()));
+        }
+        return Result.success(response);
     }
 
     @Override

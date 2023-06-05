@@ -25,6 +25,8 @@ public class PlanToBuySearchModel extends DataSearchModel {
 
     private Boolean assigned;
 
+    private Boolean bought;
+
     private String name;
 
     private String businessType;
