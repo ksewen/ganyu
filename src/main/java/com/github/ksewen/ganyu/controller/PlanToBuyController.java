@@ -109,7 +109,7 @@ public class PlanToBuyController implements LoggingController {
                 item.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(x.getBusinessType()));
             }
             return item;
-        }).collect(Collectors.toList()), page.getPageable().getPageNumber(), page.getPageable().getPageSize(),
+        }).collect(Collectors.toList()), page.getPageable().getPageNumber(), page.getContent().size(),
                 page.getTotalElements());
     }
 

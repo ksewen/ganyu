@@ -74,7 +74,7 @@ public class AdminUserController implements LoggingController {
                 page.getContent().stream()
                         .map(x -> this.beanMapperHelpers.createAndCopyProperties(x, UserInfoResponse.class))
                         .collect(Collectors.toList()),
-                page.getPageable().getPageNumber(), page.getPageable().getPageSize(), page.getTotalElements());
+                page.getPageable().getPageNumber(), page.getContent().size(), page.getTotalElements());
     }
 
     @Override
