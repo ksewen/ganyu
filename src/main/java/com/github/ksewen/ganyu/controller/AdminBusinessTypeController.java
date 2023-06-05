@@ -65,7 +65,7 @@ public class AdminBusinessTypeController implements LoggingController {
                 page.getContent().stream()
                         .map(x -> BusinessTypeInfoResponse.builder().id(x.getId()).name(x.getName()).build())
                         .collect(Collectors.toList()),
-                page.getPageable().getPageNumber(), page.getPageable().getPageSize(), page.getTotalElements());
+                page.getPageable().getPageNumber(), page.getContent().size(), page.getTotalElements());
     }
 
     @Override
