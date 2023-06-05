@@ -92,6 +92,9 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
                 list.add(criteriaBuilder.like(root.get("businessType").as(String.class),
                         this.specificationHelpers.generateFullFuzzyKeyword(model.getBusinessType())));
             }
+
+            this.specificationHelpers.buildTimeRangeCondition(list, model, root, criteriaBuilder);
+
             Predicate[] array = new Predicate[list.size()];
             Predicate[] predicates = list.toArray(array);
             return criteriaBuilder.and(predicates);
@@ -127,7 +130,8 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
         PlanToBuy record = this.planToBuyMapper.findById(id)
                 .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
         if (operationUserId != record.getUserId()) {
-            throw new CommonException(ResultCode.ACCESS_DENIED, ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE);
+            throw new CommonException(ResultCode.ACCESS_DENIED,
+                    ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE);
         }
         List<PlanToBuy> list = new ArrayList<>();
         for (Long targetUserId : targetUserIds) {

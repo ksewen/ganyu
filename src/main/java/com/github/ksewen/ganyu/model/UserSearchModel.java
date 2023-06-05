@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 /**
  * @author ksewen
- * @date 01.06.2023 22:12
+ * @date 05.06.2023 18:21
  */
 @Setter
 @Getter
@@ -15,18 +15,14 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PlanToBuySearchModel extends DataSearchModel {
+public class UserSearchModel extends DataSearchModel {
 
-    private String brand;
+    private String username;
 
-    private Long userId;
+    private String nickname;
 
-    private Long shareFrom;
+    private String email;
 
-    private Boolean assigned;
-
-    private String name;
-
-    private String businessType;
+    private String mobile;
 
 }

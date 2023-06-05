@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +20,11 @@ import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.domain.UserRole;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
+import com.github.ksewen.ganyu.helper.SpecificationHelpers;
 import com.github.ksewen.ganyu.mapper.UserMapper;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
+import com.github.ksewen.ganyu.model.UserSearchModel;
 import com.github.ksewen.ganyu.service.RoleService;
 import com.github.ksewen.ganyu.service.UserRoleService;
 import com.github.ksewen.ganyu.service.UserService;
@@ -42,6 +47,8 @@ public class UserServiceImpl implements UserService {
     private final RoleService roleService;
 
     private final BeanMapperHelpers beanMapperHelpers;
+
+    private final SpecificationHelpers specificationHelpers;
 
     @Override
     public Optional<User> findByUsername(String username) {
@@ -106,6 +113,33 @@ public class UserServiceImpl implements UserService {
                 () -> new CommonException(ResultCode.NOT_FOUND, ErrorMessageConstants.USER_NOT_FOUND_ERROR_MESSAGE));
         BeanUtils.copyProperties(userModifyModel, insert, this.beanMapperHelpers.getNullPropertyNames(userModifyModel));
         return this.userMapper.saveAndFlush(insert);
+    }
+
+    @Override
+    public Page<User> findAByConditions(UserSearchModel model, int index, int count) {
+        return this.userMapper.findAll((Specification<User>) (root, query, criteriaBuilder) -> {
+            List<Predicate> list = new ArrayList<>();
+            if (StringUtils.hasLength(model.getUsername())) {
+                list.add(criteriaBuilder.like(root.get("username").as(String.class),
+                        this.specificationHelpers.generateFullFuzzyKeyword(model.getUsername())));
+            }
+            if (StringUtils.hasLength(model.getNickname())) {
+                list.add(criteriaBuilder.like(root.get("nickname").as(String.class),
+                        this.specificationHelpers.generateFullFuzzyKeyword(model.getNickname())));
+            }
+            if (StringUtils.hasLength(model.getEmail())) {
+                list.add(criteriaBuilder.equal(root.get("email").as(String.class), model.getEmail()));
+            }
+            if (StringUtils.hasLength(model.getMobile())) {
+                list.add(criteriaBuilder.equal(root.get("mobile").as(String.class), model.getMobile()));
+            }
+
+            this.specificationHelpers.buildTimeRangeCondition(list, model, root, criteriaBuilder);
+
+            Predicate[] array = new Predicate[list.size()];
+            Predicate[] predicates = list.toArray(array);
+            return criteriaBuilder.and(predicates);
+        }, PageRequest.of(index, count, Sort.by("createTime").descending()));
     }
 
 }
