@@ -84,6 +84,9 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
             if (model.getAssigned() != null) {
                 list.add(criteriaBuilder.equal(root.get("assigned").as(Boolean.class), model.getAssigned()));
             }
+            if (model.getBought() != null) {
+                list.add(criteriaBuilder.equal(root.get("bought").as(Boolean.class), model.getBought()));
+            }
 
             if (StringUtils.hasLength(model.getName())) {
                 list.add(criteriaBuilder.equal(root.get("name").as(String.class), model.getName()));
@@ -123,11 +126,24 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
     }
 
     @Override
+    public PlanToBuy markBought(long id, long operationUserId) {
+        PlanToBuy record = this.planToBuyMapper.findById(id)
+                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
+        if (operationUserId != record.getUserId()) {
+            throw new CommonException(ResultCode.ACCESS_DENIED,
+                    ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE);
+        }
+        record.setBought(Boolean.TRUE);
+        return this.planToBuyMapper.saveAndFlush(record);
+    }
+
+    @Override
     public List<PlanToBuy> share(long id, long operationUserId, List<Long> targetUserIds, boolean assigned) {
         PlanToBuy record = this.planToBuyMapper.findById(id)
                 .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
         if (operationUserId != record.getUserId()) {
-            throw new CommonException(ResultCode.ACCESS_DENIED, ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE);
+            throw new CommonException(ResultCode.ACCESS_DENIED,
+                    ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE);
         }
         List<PlanToBuy> list = new ArrayList<>();
         for (Long targetUserId : targetUserIds) {

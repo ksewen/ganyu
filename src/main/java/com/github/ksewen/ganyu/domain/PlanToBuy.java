@@ -49,6 +49,10 @@ public class PlanToBuy {
     @Builder.Default
     private Boolean assigned = Boolean.FALSE;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1) default 0")
+    @Builder.Default
+    private Boolean bought = Boolean.FALSE;
+
     @Column(nullable = false, columnDefinition = "VARCHAR(128)")
     private String name;
 

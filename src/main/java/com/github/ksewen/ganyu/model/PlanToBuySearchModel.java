@@ -22,6 +22,8 @@ public class PlanToBuySearchModel {
 
     private Boolean assigned;
 
+    private Boolean bought;
+
     private String name;
 
     private String businessType;
