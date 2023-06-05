@@ -90,6 +90,7 @@ public class PlanToBuyController implements LoggingController {
                                                     @RequestParam(required = false) String brand,
                                                     @RequestParam(required = false) Long shareFrom,
                                                     @RequestParam(required = false) Boolean assigned,
+                                                    @RequestParam(required = false) Boolean bought,
                                                     @RequestParam(required = false) String businessType,
                                                     @RequestParam(required = false) LocalDateTime createTimeAfter,
                                                     @RequestParam(required = false) LocalDateTime createTimeBefore,
