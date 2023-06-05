@@ -1,5 +1,6 @@
 package com.github.ksewen.ganyu.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.*;
@@ -35,4 +36,8 @@ public class PlanToBuyResponse {
     private String imageUrl;
 
     private List<String> businessType;
+
+    private LocalDateTime createTime;
+
+    private LocalDateTime modifyTime;
 }

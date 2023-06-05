@@ -95,6 +95,9 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
                 list.add(criteriaBuilder.like(root.get("businessType").as(String.class),
                         this.specificationHelpers.generateFullFuzzyKeyword(model.getBusinessType())));
             }
+
+            this.specificationHelpers.buildTimeRangeCondition(list, model, root, criteriaBuilder);
+
             Predicate[] array = new Predicate[list.size()];
             Predicate[] predicates = list.toArray(array);
             return criteriaBuilder.and(predicates);

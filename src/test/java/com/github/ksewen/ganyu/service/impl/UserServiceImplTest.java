@@ -23,6 +23,7 @@ import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
+import com.github.ksewen.ganyu.helper.SpecificationHelpers;
 import com.github.ksewen.ganyu.mapper.UserMapper;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
@@ -48,6 +49,9 @@ class UserServiceImplTest {
 
     @MockBean
     private RoleService roleService;
+
+    @MockBean
+    private SpecificationHelpers specificationHelpers;
 
     private final String name = "ksewen";
 

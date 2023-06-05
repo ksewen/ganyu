@@ -1,5 +1,7 @@
 package com.github.ksewen.ganyu.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.*;
 
 /**
@@ -25,5 +27,9 @@ public class UserInfoResponse {
     private String mobile;
 
     private String avatarUrl;
+
+    private LocalDateTime createTime;
+
+    private LocalDateTime modifyTime;
 
 }

@@ -1,16 +1,15 @@
 package com.github.ksewen.ganyu.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.github.ksewen.ganyu.configuration.exception.CommonException;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.dto.request.PasswordModifyRequest;
 import com.github.ksewen.ganyu.dto.request.PasswordResetRequest;
 import com.github.ksewen.ganyu.dto.request.UserModifyRequest;
 import com.github.ksewen.ganyu.dto.response.UserInfoResponse;
 import com.github.ksewen.ganyu.dto.response.base.Result;
+import com.github.ksewen.ganyu.enums.ResultCode;
 import com.github.ksewen.ganyu.helper.BeanMapperHelpers;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.security.Authentication;
@@ -67,6 +66,15 @@ public class UserController implements LoggingController {
     public Result<Boolean> resetPassword(@Valid @RequestBody PasswordResetRequest request) {
         this.passwordService.reset(request.getCaptcha(), request.getModify(), this.authentication.getUserId());
         return Result.success(Boolean.TRUE);
+    }
+
+    @Operation(summary = "show detail of user")
+    @GetMapping("/detail")
+    public Result<UserInfoResponse> detail() {
+        User user = this.userService.findById(this.authentication.getUserId())
+                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
+        UserInfoResponse response = this.beanMapperHelpers.createAndCopyProperties(user, UserInfoResponse.class);
+        return Result.success(response);
     }
 
     @Operation(summary = "logout")
