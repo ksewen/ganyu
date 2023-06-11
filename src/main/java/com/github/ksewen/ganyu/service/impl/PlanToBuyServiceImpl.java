@@ -58,7 +58,7 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
     }
 
     @Override
-    public PlanToBuy findById(Long id, long operationUserId) {
+    public PlanToBuy findById(long id, long operationUserId) {
         PlanToBuy record = this.planToBuyMapper.findById(id)
                 .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
         if (operationUserId != record.getUserId()) {
@@ -68,7 +68,12 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
     }
 
     @Override
-    public Page<PlanToBuy> findAByConditions(PlanToBuySearchModel model, int index, int count) {
+    public List<PlanToBuy> findByUserIdAndIds(long userId, List<Long> ids) {
+        return this.planToBuyMapper.findByUserIdAndIdIn(userId, ids);
+    }
+
+    @Override
+    public Page<PlanToBuy> findAllByConditions(PlanToBuySearchModel model, int index, int count) {
         return this.planToBuyMapper.findAll((Specification<PlanToBuy>) (root, query, criteriaBuilder) -> {
             List<Predicate> list = new ArrayList<>();
             if (StringUtils.hasLength(model.getBrand())) {
@@ -126,18 +131,6 @@ public class PlanToBuyServiceImpl implements PlanToBuyService {
             this.roleService.checkAdministrator(operationUserId);
         }
         this.planToBuyMapper.deleteById(id);
-    }
-
-    @Override
-    public PlanToBuy markBought(long id, long operationUserId) {
-        PlanToBuy record = this.planToBuyMapper.findById(id)
-                .orElseThrow(() -> new CommonException(ResultCode.NOT_FOUND));
-        if (operationUserId != record.getUserId()) {
-            throw new CommonException(ResultCode.ACCESS_DENIED,
-                    ErrorMessageConstants.SHARE_RECORD_OF_OTHER_USER_ERROR_MESSAGE);
-        }
-        record.setBought(Boolean.TRUE);
-        return this.planToBuyMapper.saveAndFlush(record);
     }
 
     @Override

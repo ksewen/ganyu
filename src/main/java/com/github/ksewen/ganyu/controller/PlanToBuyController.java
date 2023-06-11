@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.github.ksewen.ganyu.constant.ParameterConstants;
@@ -27,6 +28,7 @@ import com.github.ksewen.ganyu.service.PlanToBuyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
@@ -38,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/plan-to-buy")
 @SecurityRequirement(name = "jwt-auth")
 @RequiredArgsConstructor
+@Validated
 public class PlanToBuyController implements LoggingController {
 
     private final PlanToBuyService planToBuyService;
@@ -79,7 +82,7 @@ public class PlanToBuyController implements LoggingController {
 
     @Operation(summary = "delete something to buy")
     @PostMapping("/delete")
-    public Result<Boolean> delete(@RequestParam(required = false) @NotNull(message = "{plan.to.buy.id.null}") Long id) {
+    public Result<Boolean> delete(@RequestParam(required = false) @NotNull(message = "{plan.to.buy.id.null}") @Min(message = "{plan.to.buy.id.minimal}", value = 1) Long id) {
         this.planToBuyService.delete(id, this.authentication.getUserId());
         return Result.success(Boolean.TRUE);
     }
@@ -90,7 +93,6 @@ public class PlanToBuyController implements LoggingController {
                                                     @RequestParam(required = false) String brand,
                                                     @RequestParam(required = false) Long shareFrom,
                                                     @RequestParam(required = false) Boolean assigned,
-                                                    @RequestParam(required = false) Boolean bought,
                                                     @RequestParam(required = false) String businessType,
                                                     @RequestParam(required = false) LocalDateTime createTimeAfter,
                                                     @RequestParam(required = false) LocalDateTime createTimeBefore,
@@ -102,7 +104,7 @@ public class PlanToBuyController implements LoggingController {
                 .brand(brand).shareFrom(shareFrom).assigned(assigned).businessType(businessType)
                 .createTimeAfter(createTimeAfter).createTimeBefore(createTimeBefore).modifyTimeAfter(modifyTimeAfter)
                 .modifyTimeBefore(modifyTimeBefore).build();
-        Page<PlanToBuy> page = this.planToBuyService.findAByConditions(model, index, count);
+        Page<PlanToBuy> page = this.planToBuyService.findAllByConditions(model, index, count);
         return PageResult.success(page.getContent().stream().map(x -> {
             PlanToBuyResponse item = this.beanMapperHelpers.createAndCopyProperties(x, PlanToBuyResponse.class);
             if (StringUtils.hasLength(x.getBusinessType())) {
@@ -129,18 +131,8 @@ public class PlanToBuyController implements LoggingController {
     public Result<Boolean> share(@Valid @RequestBody PlanToBuyShareRequest request) {
         this.planToBuyService.share(request.getId(), this.authentication.getUserId(), request.getTargetUserIds(),
                 request.getAssigned());
+        //FIXME: add some logic to notify the target users
         return Result.success(Boolean.TRUE);
-    }
-
-    @Operation(summary = "mark something has bought")
-    @PostMapping("/mark-bought")
-    public Result<PlanToBuyResponse> markBought(@RequestParam(required = false) @NotNull(message = "{plan.to.buy.id.null}") Long id) {
-        PlanToBuy record = this.planToBuyService.markBought(id, this.authentication.getUserId());
-        PlanToBuyResponse response = this.beanMapperHelpers.createAndCopyProperties(record, PlanToBuyResponse.class);
-        if (StringUtils.hasLength(record.getBusinessType())) {
-            response.setBusinessType(this.businessHelpers.stringCommaSeparatedToList(record.getBusinessType()));
-        }
-        return Result.success(response);
     }
 
     @Override

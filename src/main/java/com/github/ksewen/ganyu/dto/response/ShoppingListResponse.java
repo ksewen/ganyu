@@ -1,13 +1,12 @@
 package com.github.ksewen.ganyu.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import lombok.*;
 
 /**
  * @author ksewen
- * @date 31.05.2023 18:43
+ * @date 07.06.2023 12:04
  */
 @Getter
 @Setter
@@ -15,25 +14,15 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PlanToBuyResponse {
+public class ShoppingListResponse {
 
     private Long id;
 
     private Long userId;
 
-    private String brand;
-
-    private Long shareFrom;
-
-    private Boolean assigned;
-
     private String name;
 
     private String description;
-
-    private String imageUrl;
-
-    private List<String> businessType;
 
     private LocalDateTime createTime;
 

@@ -17,15 +17,15 @@ public interface PlanToBuyService {
 
     PlanToBuy save(PlanToBuyInsertModel model);
 
-    PlanToBuy findById(Long id, long operationUserId);
+    PlanToBuy findById(long id, long operationUserId);
 
-    Page<PlanToBuy> findAByConditions(PlanToBuySearchModel model, int index, int count);
+    List<PlanToBuy> findByUserIdAndIds(long userId, List<Long> ids);
+
+    Page<PlanToBuy> findAllByConditions(PlanToBuySearchModel model, int index, int count);
 
     PlanToBuy modify(PlanToBuyModifyModel model, long operationUserId);
 
     void delete(long id, long operationUserId);
-
-    PlanToBuy markBought(long id, long operationUserId);
 
     List<PlanToBuy> share(long id, long operationUserId, List<Long> targetUserIds, boolean assigned);
 
