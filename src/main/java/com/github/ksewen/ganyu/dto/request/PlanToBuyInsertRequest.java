@@ -2,6 +2,7 @@ package com.github.ksewen.ganyu.dto.request;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -26,6 +27,6 @@ public class PlanToBuyInsertRequest {
 
     private String imageUrl;
 
-    private List<String> businessType;
+    private List<@Valid @NotBlank(message = "{plan.to.buy.business.type.name.null}") String> businessType;
 
 }

@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class DataSearchModel {
 
-
     private LocalDateTime createTimeAfter;
 
     private LocalDateTime createTimeBefore;
