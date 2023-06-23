@@ -13,6 +13,7 @@ import com.github.ksewen.ganyu.configuration.exception.InvalidParamException;
 import com.github.ksewen.ganyu.domain.Token;
 import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 import com.github.ksewen.ganyu.mapper.TokenMapper;
+import com.github.ksewen.ganyu.model.JwtTokenModel;
 import com.github.ksewen.ganyu.model.JwtUserModel;
 import com.github.ksewen.ganyu.service.JwtService;
 import com.github.ksewen.ganyu.service.TokenService;
@@ -68,10 +69,11 @@ public class TokenServiceImpl implements TokenService {
         if (StringUtils.hasLength(username)) {
             final JwtUserModel user = (JwtUserModel) this.userDetailsService.loadUserByUsername(username);
             if (this.jwtService.validateToken(refreshToken, user)) {
-                String accessToken = this.jwtService.generateToken(user);
+                JwtTokenModel model = this.jwtService.generateToken(user);
                 this.removeAllUserTokens(user.getId());
-                Token save = this.save(user.getId(), accessToken);
-                return JwtTokenResponse.builder().id(save.getId()).token(accessToken).refreshToken(refreshToken).build();
+                Token save = this.save(user.getId(), model.getToken());
+                return JwtTokenResponse.builder().id(save.getId()).userId(user.getId()).username(user.getUsername())
+                        .token(model.getToken()).refreshToken(refreshToken).build();
             }
         }
         throw new InvalidParamException("invalid refresh_token");

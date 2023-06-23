@@ -1,6 +1,8 @@
 package com.github.ksewen.ganyu.service.impl;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.github.ksewen.ganyu.configuration.properties.JwtProperties;
+import com.github.ksewen.ganyu.model.JwtTokenModel;
 import com.github.ksewen.ganyu.service.JwtService;
 
 import io.jsonwebtoken.Claims;
@@ -42,17 +45,17 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
+    public JwtTokenModel generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     @Override
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public JwtTokenModel generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails, this.jwtProperties.getExpiration());
     }
 
     @Override
-    public String generateRefreshToken(UserDetails userDetails) {
+    public JwtTokenModel generateRefreshToken(UserDetails userDetails) {
         return buildToken(new HashMap<>(), userDetails, this.jwtProperties.getRefreshTokenExpiration());
     }
 
@@ -62,11 +65,13 @@ public class JwtServiceImpl implements JwtService {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+    private JwtTokenModel buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+        Date now = new Date();
+        Date expireAt = new Date(now.getTime() + expiration);
+        return JwtTokenModel.builder()
+                .token(Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername()).setIssuedAt(now)
+                        .setExpiration(expireAt).signWith(getSignInKey(), SignatureAlgorithm.HS256).compact())
+                .expireAt(LocalDateTime.ofInstant(expireAt.toInstant(), ZoneId.systemDefault())).build();
     }
 
     private boolean isTokenExpired(String token) {
