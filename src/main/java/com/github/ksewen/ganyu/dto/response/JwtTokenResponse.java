@@ -1,5 +1,7 @@
 package com.github.ksewen.ganyu.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.*;
 
 /**
@@ -16,7 +18,13 @@ public class JwtTokenResponse {
 
     private Long id;
 
+    private Long userId;
+
+    private String username;
+
     private String token;
 
     private String refreshToken;
+
+    private LocalDateTime expireAt;
 }

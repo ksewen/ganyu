@@ -3,6 +3,7 @@ package com.github.ksewen.ganyu.configuration.filter;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,29 +48,31 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final String token = this.getToken(request);
-        if (StringUtils.hasLength(token)) {
-            String username = this.jwtService.extractUsername(token);
+        if (!HttpMethod.OPTIONS.name().equals(request.getMethod())) {
+            final String token = this.getToken(request);
+            if (StringUtils.hasLength(token)) {
+                String username = this.jwtService.extractUsername(token);
 
-            logger.debug("checking authentication " + username);
+                logger.debug("checking authentication " + username);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                boolean isTokenValid = this.tokenService.findByToken(token).map(t -> !t.getExpired() && !t.getExpired())
-                        .orElse(false);
-                if (isTokenValid && this.jwtService.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    logger.debug("authenticated user " + username + ", setting security context");
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    boolean isTokenValid = this.tokenService.findByToken(token)
+                            .map(t -> !t.getExpired() && !t.getExpired()).orElse(false);
+                    if (isTokenValid && this.jwtService.validateToken(token, userDetails)) {
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        logger.debug("authenticated user " + username + ", setting security context");
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
             }
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        }
     }
 
     private String getToken(HttpServletRequest request) {

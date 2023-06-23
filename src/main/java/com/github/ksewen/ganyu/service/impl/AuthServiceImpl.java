@@ -18,6 +18,7 @@ import com.github.ksewen.ganyu.domain.Token;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 import com.github.ksewen.ganyu.enums.ResultCode;
+import com.github.ksewen.ganyu.model.JwtTokenModel;
 import com.github.ksewen.ganyu.model.JwtUserModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.*;
@@ -66,13 +67,14 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final JwtUserModel userDetails = (JwtUserModel) this.userDetailsService.loadUserByUsername(username);
-        final String token = this.jwtService.generateToken(userDetails);
-        final String refreshToken = this.jwtService.generateRefreshToken(userDetails);
+        final JwtTokenModel token = this.jwtService.generateToken(userDetails);
+        final JwtTokenModel refreshToken = this.jwtService.generateRefreshToken(userDetails);
         this.tokenService.removeAllUserTokens(userDetails.getId());
-        Token save = this.tokenService.save(userDetails.getId(), token);
-        return JwtTokenResponse.builder().id(save.getId()).token(save.getToken()).refreshToken(refreshToken).build();
+        Token save = this.tokenService.save(userDetails.getId(), token.getToken());
+        return JwtTokenResponse.builder().id(save.getId()).userId(userDetails.getId())
+                .username(userDetails.getUsername()).token(save.getToken()).refreshToken(refreshToken.getToken())
+                .expireAt(refreshToken.getExpireAt()).build();
     }
-
 
     @Override
     public void logout(Long userId) {

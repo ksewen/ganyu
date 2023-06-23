@@ -29,6 +29,7 @@ import com.github.ksewen.ganyu.domain.Token;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
 import com.github.ksewen.ganyu.enums.ResultCode;
+import com.github.ksewen.ganyu.model.JwtTokenModel;
 import com.github.ksewen.ganyu.model.JwtUserModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.service.*;
@@ -123,9 +124,8 @@ class AuthServiceImplTest {
 
     @Test
     void login() {
-
-        final String accessToken = "accessToken";
-        final String refreshToken = "refreshToken";
+        final JwtTokenModel tokenModel = JwtTokenModel.builder().token("accessToken").build();
+        final JwtTokenModel refreshTokenModel = JwtTokenModel.builder().token("refreshToken").build();
         when(this.authenticationManager.authenticate(
                 argThat(token -> name.equals(token.getPrincipal()) && password.equals(token.getCredentials()))))
                         .thenReturn(new TestingAuthenticationToken(name, password));
@@ -133,13 +133,13 @@ class AuthServiceImplTest {
                 .thenReturn(JwtUserModel.builder().id(1L).username(name).nickname(name).password(password).build());
         ArgumentMatcher<UserDetails> matcher = argument -> name.equals(argument.getUsername())
                 && password.equals(argument.getPassword());
-        when(this.jwtService.generateToken(argThat(matcher))).thenReturn(accessToken);
-        when(this.jwtService.generateRefreshToken(argThat(matcher))).thenReturn(refreshToken);
-        when(this.tokenService.save(1L, accessToken))
-                .thenReturn(Token.builder().id(1L).userId(1L).token(accessToken).build());
+        when(this.jwtService.generateToken(argThat(matcher))).thenReturn(tokenModel);
+        when(this.jwtService.generateRefreshToken(argThat(matcher))).thenReturn(refreshTokenModel);
+        when(this.tokenService.save(1L, tokenModel.getToken()))
+                .thenReturn(Token.builder().id(1L).userId(1L).token(tokenModel.getToken()).build());
         JwtTokenResponse actual = this.authService.login(name, password);
-        assertThat(actual).matches(t -> Objects.equals(1L, t.getId())).matches(t -> accessToken.equals(t.getToken()))
-                .matches(t -> refreshToken.equals(t.getRefreshToken()));
+        assertThat(actual).matches(t -> Objects.equals(1L, t.getId())).matches(t -> tokenModel.getToken().equals(t.getToken()))
+                .matches(t -> refreshTokenModel.getToken().equals(t.getRefreshToken()));
         verify(this.tokenService, times(1)).removeAllUserTokens(1L);
     }
 }
