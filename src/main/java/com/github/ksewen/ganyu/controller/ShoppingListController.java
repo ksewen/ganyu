@@ -60,6 +60,7 @@ public class ShoppingListController implements LoggingController {
     @Operation(summary = "list all the shopping list")
     @GetMapping("/list")
     public PageResult<List<ShoppingListResponse>> list(@RequestParam(required = false) String name,
+                                                       @RequestParam(required = false) Boolean finished,
                                                        @RequestParam(required = false) LocalDateTime createTimeAfter,
                                                        @RequestParam(required = false) LocalDateTime createTimeBefore,
                                                        @RequestParam(required = false) LocalDateTime modifyTimeAfter,
@@ -67,7 +68,7 @@ public class ShoppingListController implements LoggingController {
                                                        @RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_INDEX_VALUE) Integer index,
                                                        @RequestParam(required = false, defaultValue = ParameterConstants.DEFAULT_COUNT_VALUE) Integer count) {
         ShoppingListSearchModel model = ShoppingListSearchModel.builder().userId(this.authentication.getUserId())
-                .name(name).createTimeAfter(createTimeAfter).createTimeBefore(createTimeBefore)
+                .name(name).finished(finished).createTimeAfter(createTimeAfter).createTimeBefore(createTimeBefore)
                 .modifyTimeAfter(modifyTimeAfter).modifyTimeBefore(modifyTimeBefore).build();
         Page<ShoppingList> page = this.shoppingListService.findAllByConditions(model, index, count);
         return PageResult.success(

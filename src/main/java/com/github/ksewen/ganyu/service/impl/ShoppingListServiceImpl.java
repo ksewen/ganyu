@@ -86,7 +86,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
                 list.add(criteriaBuilder.equal(root.get("userId").as(Long.class), model.getUserId()));
             }
             if (StringUtils.hasLength(model.getName())) {
-                list.add(criteriaBuilder.equal(root.get("name").as(String.class), model.getName()));
+                list.add(criteriaBuilder.like(root.get("name").as(String.class),
+                        this.specificationHelpers.generateFullFuzzyKeyword(model.getName())));
+            }
+            if (model.getFinished() != null) {
+                list.add(criteriaBuilder.equal(root.get("finished").as(Boolean.class),model.getFinished()));
             }
 
             this.specificationHelpers.buildTimeRangeCondition(list, model, root, criteriaBuilder);

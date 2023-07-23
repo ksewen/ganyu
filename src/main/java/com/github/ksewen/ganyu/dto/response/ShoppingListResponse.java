@@ -24,6 +24,8 @@ public class ShoppingListResponse {
 
     private String description;
 
+    private Boolean finished;
+
     private LocalDateTime createTime;
 
     private LocalDateTime modifyTime;

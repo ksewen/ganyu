@@ -2,6 +2,7 @@ package com.github.ksewen.ganyu.security.handler;
 
 import java.io.IOException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -34,7 +35,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             throws IOException, ServletException {
         log.error(this.MESSAGE, authException);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(403);
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         response.getWriter().write(this.jacksonHelpers.toJsonString(Result.builder()
                 .code(ResultCode.UNAUTHORIZED.getCode()).message(this.MESSAGE).build()));
     }
