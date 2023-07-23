@@ -2,6 +2,7 @@ package com.github.ksewen.ganyu.security.handler;
 
 import java.io.IOException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -29,7 +30,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(403);
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         response.getWriter().write(this.jacksonHelpers.toJsonString(Result.builder()
                 .code(ResultCode.ACCESS_DENIED.getCode()).message(ResultCode.ACCESS_DENIED.getMessage()).build()));
     }

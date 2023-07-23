@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,9 +16,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.github.ksewen.ganyu.configuration.properties.JwtProperties;
+import com.github.ksewen.ganyu.dto.response.base.Result;
+import com.github.ksewen.ganyu.enums.ResultCode;
+import com.github.ksewen.ganyu.helper.JacksonHelpers;
 import com.github.ksewen.ganyu.service.JwtService;
 import com.github.ksewen.ganyu.service.TokenService;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,6 +49,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
+    private JacksonHelpers jacksonHelpers;
+
+    @Autowired
     private JwtProperties jwtProperties;
 
     @Override
@@ -51,7 +60,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (!HttpMethod.OPTIONS.name().equals(request.getMethod())) {
             final String token = this.getToken(request);
             if (StringUtils.hasLength(token)) {
-                String username = this.jwtService.extractUsername(token);
+                String username = null;
+                try {
+                    username = this.jwtService.extractUsername(token);
+                } catch (ExpiredJwtException e) {
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.getWriter().write(this.jacksonHelpers.toJsonString(Result.builder()
+                            .code(ResultCode.TOKEN_EXPIRED.getCode()).message(ResultCode.TOKEN_EXPIRED.getMessage()).build()));
+                }
+
 
                 logger.debug("checking authentication " + username);
 

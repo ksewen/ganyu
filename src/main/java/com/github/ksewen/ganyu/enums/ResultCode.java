@@ -19,6 +19,7 @@ public enum ResultCode {
     DUPLICATE_RECORD(40003,"find duplicate records"),
     CAPTCHA_INVALID(40004, "invalid captcha"),
     UNAUTHORIZED(41000, "invalid username or password"),
+    TOKEN_EXPIRED(41001, "expired token"),
     ACCESS_DENIED(43000, "permission denied"),
     NOT_FOUND(44000, "can not find the record"),
     SYSTEM_ERROR(50000, "system error"),

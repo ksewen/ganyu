@@ -20,4 +20,6 @@ public class ShoppingListSearchModel extends DataSearchModel {
     private Long userId;
 
     private String name;
+
+    private Boolean finished;
 }
