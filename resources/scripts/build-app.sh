@@ -5,8 +5,8 @@ SCRIPTPATH=$(pwd -P)
 popd > /dev/null
 
 set_profile() {
-    cp -f /ganyu/resources/properties/application-"$profile".properties \
-        /ganyu/src/main/resources/application.properties
+    cp -f /ganyu/resources/properties/application-"$profile".yaml \
+        /ganyu/src/main/resources/application.yaml
 }
 
 do_package() {

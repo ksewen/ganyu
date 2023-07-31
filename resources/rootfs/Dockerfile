@@ -17,10 +17,12 @@ RUN mkdir /ganyu
 COPY --from=builder /ganyu/target/ganyu-0.0.1-SNAPSHOT.jar /ganyu
 COPY --from=builder /ganyu/resources/scripts/bootstrap.sh  /
 
+RUN apt-get update && apt-get install -y netcat
+
 VOLUME /tmp
 
 WORKDIR /ganyu
 
 EXPOSE 8087
 
-CMD [ "/bootstrap.sh" ]
+ENTRYPOINT [ "/bootstrap.sh" ]
