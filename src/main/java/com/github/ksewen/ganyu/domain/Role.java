@@ -24,7 +24,7 @@ import lombok.*;
 @Builder
 @ToString
 @Entity
-@Table(name = "role")
+@Table(name = "role", uniqueConstraints = @UniqueConstraint(columnNames= {"name"}))
 @EntityListeners(value = AuditingEntityListener.class)
 @SQLDelete(sql = "UPDATE role SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")

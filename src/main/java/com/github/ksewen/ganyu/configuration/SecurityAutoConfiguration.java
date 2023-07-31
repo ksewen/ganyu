@@ -45,7 +45,7 @@ public class SecurityAutoConfiguration {
 
                 .authorizeHttpRequests().requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/*/*.html", "/*/*.css", "/*/*.js",
-                        "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**", "swagger-ui/**", "/error")
+                        "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**", "swagger-ui/**", "/error", "/actuator", "/actuator/**")
                 .permitAll().requestMatchers("/auth/**").permitAll().anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(this.authenticationEntryPoint)
                 .accessDeniedHandler(this.accessDeniedHandler);
