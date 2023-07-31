@@ -1,4 +1,4 @@
-name: build for ganyu service
+name: ganyu
 on:
   pull_request:
     types:
