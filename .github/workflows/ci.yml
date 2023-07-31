@@ -1,12 +1,13 @@
 name: build for ganyu service
 on:
-  pull_request:
+  pull_request_target:
     types:
       - closed
     branches:
       - main
 jobs:
-  run:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     
     steps:
