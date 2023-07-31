@@ -1,5 +1,7 @@
 # ganyu
-
+![example workflow](https://github.com/ksewen/ganyu/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/ksewen/ganyu/branch/main/graph/badge.svg?token=GGQISY2M7R)](https://codecov.io/gh/ksewen/ganyu)  
+  
 Ein kleiner Helfer für meine Familie und Freunde.
 
 ## Einführung
