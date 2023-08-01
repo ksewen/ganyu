@@ -14,8 +14,7 @@ import lombok.*;
 @ToString
 public class BusinessTypeInfoResponse {
 
-    private Long id;
+  private Long id;
 
-    private String name;
-
+  private String name;
 }

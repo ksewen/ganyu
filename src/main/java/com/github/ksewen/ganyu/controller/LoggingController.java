@@ -6,6 +6,5 @@ package com.github.ksewen.ganyu.controller;
  */
 public interface LoggingController {
 
-    String name();
-
+  String name();
 }

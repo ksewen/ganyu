@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import java.util.List;
-
 import lombok.*;
 
 /**
@@ -16,12 +15,11 @@ import lombok.*;
 @ToString
 public class ShoppingListInsertModel {
 
-    private String name;
+  private String name;
 
-    private Long userId;
+  private Long userId;
 
-    private String description;
+  private String description;
 
-    private List<Long> itemIds;
-
+  private List<Long> itemIds;
 }

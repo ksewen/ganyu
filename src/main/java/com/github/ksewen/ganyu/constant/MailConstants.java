@@ -6,7 +6,9 @@ package com.github.ksewen.ganyu.constant;
  */
 public class MailConstants {
 
-    public static final String CAPTCHA_SUBJECT = "Captcha from Ganyu system, please don't reply this email.";
+  public static final String CAPTCHA_SUBJECT =
+      "Captcha from Ganyu system, please don't reply this email.";
 
-    public static final String CAPTCHA_TEXT_TEMPLATE = "Your captcha is: {}, type: {}, please use it before {}";
+  public static final String CAPTCHA_TEXT_TEMPLATE =
+      "Your captcha is: {}, type: {}, please use it before {}";
 }

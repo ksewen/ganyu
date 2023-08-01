@@ -15,9 +15,9 @@ import lombok.*;
 @ToString
 public class PasswordModifyRequest {
 
-    @NotBlank(message = "{user.exist.password.null}")
-    private String exist;
+  @NotBlank(message = "{user.exist.password.null}")
+  private String exist;
 
-    @NotBlank(message = "{user.modify.password.null}")
-    private String modify;
+  @NotBlank(message = "{user.modify.password.null}")
+  private String modify;
 }

@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import com.github.ksewen.ganyu.model.base.DataSearchModel;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,12 +16,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class UserSearchModel extends DataSearchModel {
 
-    private String username;
+  private String username;
 
-    private String nickname;
+  private String nickname;
 
-    private String email;
+  private String email;
 
-    private String mobile;
-
+  private String mobile;
 }

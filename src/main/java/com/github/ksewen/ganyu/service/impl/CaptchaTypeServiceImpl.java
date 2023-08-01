@@ -1,14 +1,11 @@
 package com.github.ksewen.ganyu.service.impl;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
 import com.github.ksewen.ganyu.domain.CaptchaType;
 import com.github.ksewen.ganyu.mapper.CaptchaTypeMapper;
 import com.github.ksewen.ganyu.service.CaptchaTypeService;
-
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * @author ksewen
@@ -18,15 +15,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CaptchaTypeServiceImpl implements CaptchaTypeService {
 
-    private final CaptchaTypeMapper captchaTypeMapper;
+  private final CaptchaTypeMapper captchaTypeMapper;
 
-    @Override
-    public Optional<CaptchaType> findById(Long id) {
-        return this.captchaTypeMapper.findById(id);
-    }
+  @Override
+  public Optional<CaptchaType> findById(Long id) {
+    return this.captchaTypeMapper.findById(id);
+  }
 
-    @Override
-    public Optional<CaptchaType> findByName(String name) {
-        return this.captchaTypeMapper.findByName(name);
-    }
+  @Override
+  public Optional<CaptchaType> findByName(String name) {
+    return this.captchaTypeMapper.findByName(name);
+  }
 }

@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import com.github.ksewen.ganyu.model.base.DataSearchModel;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,18 +16,17 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class PlanToBuySearchModel extends DataSearchModel {
 
-    private String brand;
+  private String brand;
 
-    private Long userId;
+  private Long userId;
 
-    private Long shareFrom;
+  private Long shareFrom;
 
-    private Boolean assigned;
+  private Boolean assigned;
 
-    private Boolean bought;
+  private Boolean bought;
 
-    private String name;
+  private String name;
 
-    private String businessType;
-
+  private String businessType;
 }

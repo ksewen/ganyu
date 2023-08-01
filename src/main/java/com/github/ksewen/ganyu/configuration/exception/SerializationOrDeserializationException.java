@@ -8,12 +8,11 @@ import com.github.ksewen.ganyu.enums.ResultCode;
  */
 public class SerializationOrDeserializationException extends CommonException {
 
-    public SerializationOrDeserializationException() {
-        super(ResultCode.SERIALIZATION_OR_DESERIALIZATION_ERROR);
-    }
+  public SerializationOrDeserializationException() {
+    super(ResultCode.SERIALIZATION_OR_DESERIALIZATION_ERROR);
+  }
 
-    public SerializationOrDeserializationException(String message) {
-        super(ResultCode.SERIALIZATION_OR_DESERIALIZATION_ERROR, message);
-    }
-
+  public SerializationOrDeserializationException(String message) {
+    super(ResultCode.SERIALIZATION_OR_DESERIALIZATION_ERROR, message);
+  }
 }

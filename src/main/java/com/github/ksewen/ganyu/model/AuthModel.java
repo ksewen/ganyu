@@ -1,9 +1,7 @@
 package com.github.ksewen.ganyu.model;
 
-import java.util.List;
-
 import com.github.ksewen.ganyu.domain.Role;
-
+import java.util.List;
 import lombok.*;
 
 /**

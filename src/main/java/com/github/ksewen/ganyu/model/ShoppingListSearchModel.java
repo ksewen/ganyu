@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import com.github.ksewen.ganyu.model.base.DataSearchModel;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,9 +16,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ShoppingListSearchModel extends DataSearchModel {
 
-    private Long userId;
+  private Long userId;
 
-    private String name;
+  private String name;
 
-    private Boolean finished;
+  private Boolean finished;
 }

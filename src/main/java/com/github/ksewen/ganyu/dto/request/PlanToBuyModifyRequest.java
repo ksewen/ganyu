@@ -1,8 +1,7 @@
 package com.github.ksewen.ganyu.dto.request;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.*;
 
 /**
@@ -17,17 +16,16 @@ import lombok.*;
 @ToString
 public class PlanToBuyModifyRequest {
 
-    @NotNull(message = "{plan.to.buy.id.null}")
-    private Long id;
+  @NotNull(message = "{plan.to.buy.id.null}")
+  private Long id;
 
-    private String brand;
+  private String brand;
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private String imageUrl;
+  private String imageUrl;
 
-    private List<String> businessType;
-
+  private List<String> businessType;
 }

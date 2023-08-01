@@ -1,11 +1,10 @@
 package com.github.ksewen.ganyu.dto.request;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.*;
 
 /**
@@ -20,10 +19,12 @@ import lombok.*;
 @ToString
 public class ShoppingListItemInsertRequest {
 
-    @NotNull(message = "{shopping.list.id.null}")
-    private Long shoppingListId;
+  @NotNull(message = "{shopping.list.id.null}")
+  private Long shoppingListId;
 
-    @NotEmpty(message = "{shopping.list.items.empty}")
-    private List<@Valid @NotNull(message = "{shopping.list.item.id.null}") @Min(message = "shopping.list.item.id.minimal", value = 1) Long> itemIds;
-
+  @NotEmpty(message = "{shopping.list.items.empty}")
+  private List<
+          @Valid @NotNull(message = "{shopping.list.item.id.null}")
+          @Min(message = "shopping.list.item.id.minimal", value = 1) Long>
+      itemIds;
 }
