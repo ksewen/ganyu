@@ -1,13 +1,11 @@
 package com.github.ksewen.ganyu.configuration;
 
 import java.util.Optional;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ksewen

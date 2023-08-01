@@ -13,12 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = CaptchaHelpers.class)
 class CaptchaHelpersTest {
 
-    @Autowired
-    private CaptchaHelpers captchaHelpers;
+  @Autowired private CaptchaHelpers captchaHelpers;
 
-    @Test
-    void generateSimple() {
-        String actual = this.captchaHelpers.generateSimple();
-        assertThat(actual).isNotNull().hasSize(6);
-    }
+  @Test
+  void generateSimple() {
+    String actual = this.captchaHelpers.generateSimple();
+    assertThat(actual).isNotNull().hasSize(6);
+  }
 }

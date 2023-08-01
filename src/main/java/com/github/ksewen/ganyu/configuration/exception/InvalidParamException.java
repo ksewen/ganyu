@@ -8,11 +8,11 @@ import com.github.ksewen.ganyu.enums.ResultCode;
  */
 public class InvalidParamException extends CommonException {
 
-    public InvalidParamException() {
-        super(ResultCode.PARAM_INVALID);
-    }
+  public InvalidParamException() {
+    super(ResultCode.PARAM_INVALID);
+  }
 
-    public InvalidParamException(String message) {
-        super(ResultCode.PARAM_INVALID, message);
-    }
+  public InvalidParamException(String message) {
+    super(ResultCode.PARAM_INVALID, message);
+  }
 }

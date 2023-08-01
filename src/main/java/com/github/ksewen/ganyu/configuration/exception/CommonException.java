@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.configuration.exception;
 
 import com.github.ksewen.ganyu.enums.ResultCode;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

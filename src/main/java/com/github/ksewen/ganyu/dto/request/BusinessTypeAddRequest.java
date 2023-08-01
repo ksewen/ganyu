@@ -15,7 +15,6 @@ import lombok.*;
 @ToString
 public class BusinessTypeAddRequest {
 
-    @NotBlank(message = "{business.type.name.null}")
-    private String name;
-
+  @NotBlank(message = "{business.type.name.null}")
+  private String name;
 }

@@ -1,9 +1,8 @@
 package com.github.ksewen.ganyu.dto.request;
 
-import org.hibernate.validator.constraints.Range;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 /**
  * @author ksewen
@@ -16,8 +15,7 @@ import lombok.*;
 @Builder
 public class CaptchaApplyRequest {
 
-    @NotNull(message = "{captcha.type.id.null}")
-    @Range(min = 1)
-    private Long typeId;
-
+  @NotNull(message = "{captcha.type.id.null}")
+  @Range(min = 1)
+  private Long typeId;
 }

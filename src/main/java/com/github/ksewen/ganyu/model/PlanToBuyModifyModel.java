@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import java.util.List;
-
 import lombok.*;
 
 /**
@@ -16,16 +15,15 @@ import lombok.*;
 @ToString
 public class PlanToBuyModifyModel {
 
-    private long id;
+  private long id;
 
-    private String brand;
+  private String brand;
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private String imageUrl;
+  private String imageUrl;
 
-    private List<String> businessType;
-
+  private List<String> businessType;
 }

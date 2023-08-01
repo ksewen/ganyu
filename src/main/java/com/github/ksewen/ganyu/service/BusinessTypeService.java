@@ -1,8 +1,7 @@
 package com.github.ksewen.ganyu.service;
 
-import org.springframework.data.domain.Page;
-
 import com.github.ksewen.ganyu.domain.BusinessType;
+import org.springframework.data.domain.Page;
 
 /**
  * @author ksewen
@@ -10,9 +9,9 @@ import com.github.ksewen.ganyu.domain.BusinessType;
  */
 public interface BusinessTypeService {
 
-    BusinessType save(BusinessType businessType);
+  BusinessType save(BusinessType businessType);
 
-    void delete(Long id);
+  void delete(Long id);
 
-    Page<BusinessType> findAll(int currentIndex, int pageCount);
+  Page<BusinessType> findAll(int currentIndex, int pageCount);
 }

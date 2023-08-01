@@ -15,10 +15,9 @@ import lombok.*;
 @ToString
 public class PasswordResetRequest {
 
-    @NotBlank(message = "{captcha.code.null}")
-    private String captcha;
+  @NotBlank(message = "{captcha.code.null}")
+  private String captcha;
 
-    @NotBlank(message = "{user.modify.password.null}")
-    private String modify;
-
+  @NotBlank(message = "{user.modify.password.null}")
+  private String modify;
 }

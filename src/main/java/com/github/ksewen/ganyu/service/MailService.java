@@ -6,6 +6,5 @@ package com.github.ksewen.ganyu.service;
  */
 public interface MailService {
 
-    void sendSimple(String to, String subject, String text);
-
+  void sendSimple(String to, String subject, String text);
 }

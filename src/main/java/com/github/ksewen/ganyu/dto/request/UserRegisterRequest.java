@@ -16,13 +16,12 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 public class UserRegisterRequest extends LoginRequest {
 
-    @NotBlank(message = "{auth.email.null}")
-    private String email;
+  @NotBlank(message = "{auth.email.null}")
+  private String email;
 
-    private String nickname;
+  private String nickname;
 
-    private String mobile;
+  private String mobile;
 
-    private String avatarUrl;
-
+  private String avatarUrl;
 }

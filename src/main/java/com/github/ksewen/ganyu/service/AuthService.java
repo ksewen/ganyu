@@ -10,9 +10,9 @@ import com.github.ksewen.ganyu.model.UserRegisterModel;
  */
 public interface AuthService {
 
-    User register (UserRegisterModel userRegisterModel, String... roleNames);
+  User register(UserRegisterModel userRegisterModel, String... roleNames);
 
-    JwtTokenResponse login(String username, String password);
+  JwtTokenResponse login(String username, String password);
 
-    void logout(Long userId);
+  void logout(Long userId);
 }

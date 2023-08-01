@@ -30,7 +30,7 @@ show_usage() {
 }
 
 IMAGE_NAME=ksewen/ganyu
-IMAGE_VERSION=1.0.0.RELEASE
+IMAGE_VERSION=1.0.1.RELEASE
 PROFILE=test
 
 

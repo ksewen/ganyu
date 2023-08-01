@@ -1,13 +1,11 @@
 package com.github.ksewen.ganyu.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.service.AdminService;
 import com.github.ksewen.ganyu.service.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * @author ksewen

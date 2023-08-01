@@ -14,16 +14,15 @@ import lombok.*;
 @ToString
 public class UserRegisterModel {
 
-    private String username;
+  private String username;
 
-    private String nickname;
+  private String nickname;
 
-    private String email;
+  private String email;
 
-    private String password;
+  private String password;
 
-    private String mobile;
+  private String mobile;
 
-    private String avatarUrl;
-
+  private String avatarUrl;
 }
