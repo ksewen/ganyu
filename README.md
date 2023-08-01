@@ -10,7 +10,10 @@ Wegen des Interesses wurde dieses Projekt erstellt. Momentan ist es in Bearbeitu
 
 ## Konventionen der Codierung
 
-//TODO
+- Wenn die Kontrolllogik ungeeignet ist, markieren Sie sie mit Kommentaren wie **// TODO** oder **// FIXME**.
+- Der Codestil (Standards) [google](https://google.github.io/styleguide/javaguide.html).
+- Alle drei Schichten von „Controller/Service/DAO(Repository)“ können **nicht** weggelassen werden.
+- Die SOLID-Prinzipien sind willkommen.
 
 ## Wie erhält man Informationen von aktuellem Benutzer
 
