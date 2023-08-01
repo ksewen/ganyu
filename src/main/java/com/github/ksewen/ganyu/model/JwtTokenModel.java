@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model;
 
 import java.time.LocalDateTime;
-
 import lombok.*;
 
 /**

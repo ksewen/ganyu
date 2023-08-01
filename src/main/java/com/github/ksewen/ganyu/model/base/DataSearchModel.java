@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.model.base;
 
 import java.time.LocalDateTime;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,12 +16,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class DataSearchModel {
 
-    private LocalDateTime createTimeAfter;
+  private LocalDateTime createTimeAfter;
 
-    private LocalDateTime createTimeBefore;
+  private LocalDateTime createTimeBefore;
 
-    private LocalDateTime modifyTimeAfter;
+  private LocalDateTime modifyTimeAfter;
 
-    private LocalDateTime modifyTimeBefore;
-
+  private LocalDateTime modifyTimeBefore;
 }

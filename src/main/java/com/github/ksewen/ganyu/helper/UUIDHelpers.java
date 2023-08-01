@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.helper;
 
 import java.util.UUID;
-
 import org.springframework.util.StringUtils;
 
 /**

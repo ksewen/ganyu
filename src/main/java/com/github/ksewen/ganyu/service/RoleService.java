@@ -1,8 +1,7 @@
 package com.github.ksewen.ganyu.service;
 
-import java.util.List;
-
 import com.github.ksewen.ganyu.domain.Role;
+import java.util.List;
 
 /**
  * @author ksewen
@@ -10,11 +9,11 @@ import com.github.ksewen.ganyu.domain.Role;
  */
 public interface RoleService {
 
-    List<Role> findByUserId(Long userId);
+  List<Role> findByUserId(Long userId);
 
-    Role findFirstByName(String name);
-    List<Role> findByNames(String... name);
+  Role findFirstByName(String name);
 
-    void checkAdministrator(long userId);
+  List<Role> findByNames(String... name);
 
+  void checkAdministrator(long userId);
 }

@@ -16,10 +16,11 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class LoginRequest {
 
-    @NotBlank(message = "{auth.username.null}")
-    private String username;;
+  @NotBlank(message = "{auth.username.null}")
+  private String username;
 
-    @NotBlank(message = "{auth.password.null}")
-    private String password;
+  ;
 
+  @NotBlank(message = "{auth.password.null}")
+  private String password;
 }

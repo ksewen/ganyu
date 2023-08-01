@@ -1,9 +1,8 @@
 package com.github.ksewen.ganyu.configuration;
 
+import com.github.ksewen.ganyu.aspect.LogTraceAspect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.github.ksewen.ganyu.aspect.LogTraceAspect;
 
 /**
  * @author ksewen
@@ -12,9 +11,8 @@ import com.github.ksewen.ganyu.aspect.LogTraceAspect;
 @Configuration
 public class AspectAutoConfiguration {
 
-    @Bean
-    public LogTraceAspect logTraceAspect() {
-        return new LogTraceAspect();
-    }
-
+  @Bean
+  public LogTraceAspect logTraceAspect() {
+    return new LogTraceAspect();
+  }
 }

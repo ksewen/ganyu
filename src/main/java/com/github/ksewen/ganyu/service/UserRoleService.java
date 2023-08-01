@@ -1,8 +1,7 @@
 package com.github.ksewen.ganyu.service;
 
-import java.util.List;
-
 import com.github.ksewen.ganyu.domain.UserRole;
+import java.util.List;
 
 /**
  * @author ksewen
@@ -10,10 +9,9 @@ import com.github.ksewen.ganyu.domain.UserRole;
  */
 public interface UserRoleService {
 
-    List<UserRole> findByUserId(Long userId);
+  List<UserRole> findByUserId(Long userId);
 
-    UserRole saveAndFlush(UserRole userRole);
+  UserRole saveAndFlush(UserRole userRole);
 
-    List<UserRole> saveAllAndFlush(List<UserRole> userRoles);
-
+  List<UserRole> saveAllAndFlush(List<UserRole> userRoles);
 }

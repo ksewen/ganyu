@@ -6,5 +6,5 @@ package com.github.ksewen.ganyu.constant;
  */
 public class SystemConstants {
 
-    public static final String GLOBAL_DATETIME_FORMAT = "yyyy-MM-dd hh:mm:ss";
+  public static final String GLOBAL_DATETIME_FORMAT = "yyyy-MM-dd hh:mm:ss";
 }

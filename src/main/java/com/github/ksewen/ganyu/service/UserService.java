@@ -1,15 +1,13 @@
 package com.github.ksewen.ganyu.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-
 import com.github.ksewen.ganyu.domain.Role;
 import com.github.ksewen.ganyu.domain.User;
 import com.github.ksewen.ganyu.model.UserModifyModel;
 import com.github.ksewen.ganyu.model.UserRegisterModel;
 import com.github.ksewen.ganyu.model.UserSearchModel;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.domain.Page;
 
 /**
  * @author ksewen

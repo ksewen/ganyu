@@ -1,14 +1,12 @@
 package com.github.ksewen.ganyu.service.impl;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-
 import com.github.ksewen.ganyu.domain.BusinessType;
 import com.github.ksewen.ganyu.mapper.BusinessTypeMapper;
 import com.github.ksewen.ganyu.service.BusinessTypeService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
 /**
  * @author ksewen

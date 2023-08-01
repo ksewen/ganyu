@@ -6,8 +6,7 @@ package com.github.ksewen.ganyu.service;
  */
 public interface PasswordService {
 
-    void modify(String exist, String modify, long userId);
+  void modify(String exist, String modify, long userId);
 
-    void reset(String captcha, String modify, long userId);
-
+  void reset(String captcha, String modify, long userId);
 }

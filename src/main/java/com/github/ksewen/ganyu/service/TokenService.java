@@ -1,9 +1,8 @@
 package com.github.ksewen.ganyu.service;
 
-import java.util.Optional;
-
 import com.github.ksewen.ganyu.domain.Token;
 import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
+import java.util.Optional;
 
 /**
  * @author ksewen
@@ -11,12 +10,11 @@ import com.github.ksewen.ganyu.dto.response.JwtTokenResponse;
  */
 public interface TokenService {
 
-    void removeAllUserTokens(Long userId);
+  void removeAllUserTokens(Long userId);
 
-    Token save(Long userId, String token);
+  Token save(Long userId, String token);
 
-    JwtTokenResponse refresh(String refreshToken);
+  JwtTokenResponse refresh(String refreshToken);
 
-    Optional<Token> findByToken(String token);
-
+  Optional<Token> findByToken(String token);
 }

@@ -9,6 +9,5 @@ import com.github.ksewen.ganyu.model.UserModifyModel;
  */
 public interface AdminService {
 
-    User modify(UserModifyModel userRegisterModel, long operationUserId);
-
+  User modify(UserModifyModel userRegisterModel, long operationUserId);
 }

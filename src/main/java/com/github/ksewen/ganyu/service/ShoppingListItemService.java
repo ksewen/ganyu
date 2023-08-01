@@ -1,11 +1,9 @@
 package com.github.ksewen.ganyu.service;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-
 import com.github.ksewen.ganyu.domain.ShoppingListItem;
 import com.github.ksewen.ganyu.model.ShoppingListItemQueryModel;
+import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * @author ksewen

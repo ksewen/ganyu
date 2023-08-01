@@ -1,8 +1,7 @@
 package com.github.ksewen.ganyu.service;
 
-import java.util.Optional;
-
 import com.github.ksewen.ganyu.domain.CaptchaType;
+import java.util.Optional;
 
 /**
  * @author ksewen

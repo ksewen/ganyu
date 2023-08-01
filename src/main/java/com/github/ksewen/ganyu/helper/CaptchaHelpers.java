@@ -8,11 +8,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class CaptchaHelpers {
 
-    public String generateSimple() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        int captchaNum = random.nextInt(1000000);
-        String captcha = String.format("%06d", captchaNum);
-        return captcha;
-    }
-
+  public String generateSimple() {
+    ThreadLocalRandom random = ThreadLocalRandom.current();
+    int captchaNum = random.nextInt(1000000);
+    String captcha = String.format("%06d", captchaNum);
+    return captcha;
+  }
 }

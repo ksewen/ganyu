@@ -1,14 +1,11 @@
 package com.github.ksewen.ganyu.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.github.ksewen.ganyu.domain.UserRole;
 import com.github.ksewen.ganyu.mapper.UserRoleMapper;
 import com.github.ksewen.ganyu.service.UserRoleService;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * @author ksewen
@@ -18,20 +15,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserRoleServiceImpl implements UserRoleService {
 
-    private final UserRoleMapper userRoleMapper;
+  private final UserRoleMapper userRoleMapper;
 
-    @Override
-    public List<UserRole> findByUserId(Long userId) {
-        return this.userRoleMapper.findByUserId(userId);
-    }
+  @Override
+  public List<UserRole> findByUserId(Long userId) {
+    return this.userRoleMapper.findByUserId(userId);
+  }
 
-    @Override
-    public UserRole saveAndFlush(UserRole userRole) {
-        return this.userRoleMapper.saveAndFlush(userRole);
-    }
+  @Override
+  public UserRole saveAndFlush(UserRole userRole) {
+    return this.userRoleMapper.saveAndFlush(userRole);
+  }
 
-    @Override
-    public List<UserRole> saveAllAndFlush(List<UserRole> userRoles) {
-        return this.userRoleMapper.saveAllAndFlush(userRoles);
-    }
+  @Override
+  public List<UserRole> saveAllAndFlush(List<UserRole> userRoles) {
+    return this.userRoleMapper.saveAllAndFlush(userRoles);
+  }
 }

@@ -1,7 +1,6 @@
 package com.github.ksewen.ganyu.dto.response;
 
 import java.time.LocalDateTime;
-
 import lombok.*;
 
 /**
@@ -16,20 +15,19 @@ import lombok.*;
 @ToString
 public class UserInfoResponse {
 
-    private Long id;
+  private Long id;
 
-    private String username;
+  private String username;
 
-    private String nickname;
+  private String nickname;
 
-    private String email;
+  private String email;
 
-    private String mobile;
+  private String mobile;
 
-    private String avatarUrl;
+  private String avatarUrl;
 
-    private LocalDateTime createTime;
+  private LocalDateTime createTime;
 
-    private LocalDateTime modifyTime;
-
+  private LocalDateTime modifyTime;
 }
