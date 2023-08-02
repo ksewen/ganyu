@@ -22,4 +22,10 @@ public class ErrorMessageConstants {
 
   public static final String SHOPPING_LIST_AND_ITEM_NOT_MATCH_ERROR_MESSAGE =
       "found any items not match the given shopping list";
+
+  public static final String PLAN_TO_BUY_NOT_FOUND_ERROR_MESSAGE =
+      "can not found any records by given ids and user id";
+
+  public static final String CAPTCHA_TYPE_NOT_FOUND_ERROR_MESSAGE = "can not find the captcha type";
+
 }
