@@ -1,9 +1,9 @@
 # ganyu
 
 ![ganyu](https://github.com/ksewen/ganyu/actions/workflows/ci.yml/badge.svg)
-![codecov](https://codecov.io/gh/ksewen/ganyu/branch/release/graph/badge.svg?token=GGQISY2M7R)](https://codecov.io/gh/ksewen/ganyu)
-![Java](https://img.shields.io/badge/Java-17-blue.svg)]
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0.6-blue.svg)]
+[![codecov](https://codecov.io/gh/ksewen/ganyu/branch/release/graph/badge.svg?token=GGQISY2M7R)](https://codecov.io/gh/ksewen/ganyu)
+![Java](https://img.shields.io/badge/Java-17-blue.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0.6-blue.svg)
 
 Ein kleiner Helfer für meine Familie und Freunde.
 
