@@ -27,4 +27,5 @@ public class ErrorMessageConstants {
       "can not found any records by given ids and user id";
 
   public static final String CAPTCHA_TYPE_NOT_FOUND_ERROR_MESSAGE = "can not find the captcha type";
+
 }

@@ -18,7 +18,8 @@ Projekt meinen Familien und Freunden helfen kann.
 
 ## Einführung
 
-Momentan ist dieses Projekt in Bearbeitung. In dem finden Sie nur Code für den Backend-Server. In Zukunft werde ich Frontend-Seiten [ganyu-web](https://github.com/ksewen/ganyu-web) und
+Momentan ist dieses Projekt in Bearbeitung. In dem finden Sie nur 
+Code für den Backend-Server. In Zukunft werde ich Frontend-Seiten [ganyu-web](https://github.com/ksewen/ganyu-web) und
 noch eine App für IOS anbieten.
 
 ## Konventionen der Codierung

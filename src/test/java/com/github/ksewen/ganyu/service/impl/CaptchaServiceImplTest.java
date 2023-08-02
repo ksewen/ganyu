@@ -46,7 +46,9 @@ class CaptchaServiceImplTest {
   private final String email = "ksewen77@gmail.com";
 
   private final String code = "123456";
+  
   private final long userId = 1L;
+  
   private final long captchaTypeId = 1L;
 
   private final String captchaName = "TEST";

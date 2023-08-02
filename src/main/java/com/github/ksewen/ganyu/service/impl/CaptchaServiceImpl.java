@@ -59,6 +59,7 @@ public class CaptchaServiceImpl implements CaptchaService {
                     new CommonException(
                         ResultCode.NOT_FOUND,
                         ErrorMessageConstants.CAPTCHA_TYPE_NOT_FOUND_ERROR_MESSAGE));
+
     LocalDateTime expiration = LocalDateTime.now().plusSeconds(this.EXPIRE_TIME);
     UserCaptcha record =
         UserCaptcha.builder()
