@@ -47,7 +47,7 @@ public class ShoppingListItemServiceImpl implements ShoppingListItemService {
     List<PlanToBuy> list = this.planToBuyService.findByUserIdAndIds(userId, ids);
     if (CollectionUtils.isEmpty(list) || list.size() != ids.size()) {
       throw new CommonException(
-          ResultCode.NOT_FOUND, "can not found any records by given ids and user id");
+          ResultCode.NOT_FOUND, ErrorMessageConstants.PLAN_TO_BUY_NOT_FOUND_ERROR_MESSAGE);
     }
     List<ShoppingListItem> insert =
         list.stream()
