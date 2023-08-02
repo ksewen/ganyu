@@ -1,12 +1,17 @@
 # ganyu
-![example workflow](https://github.com/ksewen/ganyu/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/gh/ksewen/ganyu/branch/release/graph/badge.svg?token=GGQISY2M7R)](https://codecov.io/gh/ksewen/ganyu)  
-  
+
+![ganyu](https://github.com/ksewen/ganyu/actions/workflows/ci.yml/badge.svg)
+![codecov](https://codecov.io/gh/ksewen/ganyu/branch/release/graph/badge.svg?token=GGQISY2M7R)](https://codecov.io/gh/ksewen/ganyu)
+![Java](https://img.shields.io/badge/Java-17-blue.svg)]
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0.6-blue.svg)]
+
 Ein kleiner Helfer für meine Familie und Freunde.
 
 ## Einführung
 
-Wegen des Interesses wurde dieses Projekt erstellt. Momentan ist es in Bearbeitung. In diesem Projekt finden Sie nur Code für den Backend-Server. In Zukunft werde ich Frontend-Seiten [ganyu-web](https://github.com/ksewen/ganyu-web) und noch eine App für IOS anbieten.
+Wegen des Interesses wurde dieses Projekt erstellt. Momentan ist es in Bearbeitung. In diesem Projekt finden Sie nur
+Code für den Backend-Server. In Zukunft werde ich Frontend-Seiten [ganyu-web](https://github.com/ksewen/ganyu-web) und
+noch eine App für IOS anbieten.
 
 ## Konventionen der Codierung
 
