@@ -55,7 +55,10 @@ public class CaptchaServiceImpl implements CaptchaService {
         this.captchaTypeService
             .findById(typeId)
             .orElseThrow(
-                () -> new CommonException(ResultCode.NOT_FOUND, "can not find the captcha type"));
+                () ->
+                    new CommonException(
+                        ResultCode.NOT_FOUND,
+                        ErrorMessageConstants.CAPTCHA_TYPE_NOT_FOUND_ERROR_MESSAGE));
     LocalDateTime expiration = LocalDateTime.now().plusSeconds(this.EXPIRE_TIME);
     UserCaptcha record =
         UserCaptcha.builder()
