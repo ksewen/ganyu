@@ -1,16 +1,24 @@
-# ganyu
+# GANYU
 
 ![ganyu](https://github.com/ksewen/ganyu/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/ksewen/ganyu/branch/release/graph/badge.svg?token=GGQISY2M7R)](https://codecov.io/gh/ksewen/ganyu)
 ![Java](https://img.shields.io/badge/Java-17-blue.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0.6-blue.svg)
 
-Ein kleiner Helfer für meine Familie und Freunde.
+In der Freizeit habe ich mit diesem Projekt gearbeitet. Mit dem kann ich meine Fähigkeit der Entwicklung
+demonstrieren.  
+In diesem Projekt habe ich ein paar moderne Java-Technologie wie Spring Boot, Docker benutzt. Außerdem habe ich viele
+Unit-Tests geschrieben.  
+Wenn ich das Projekt in Zukunft erledige, können Benutzer das als Lebensassistenten verwenden.
+
+### Was ist „Ganyu“?
+
+**Ganyu** ist eine Figur im Computerspiel „Genshin Impact“ und arbeitet als Sekretärin. Ich hoffe darauf, dass dieses
+Projekt meinen Familien und Freunden helfen kann.
 
 ## Einführung
 
-Wegen des Interesses wurde dieses Projekt erstellt. Momentan ist es in Bearbeitung. In diesem Projekt finden Sie nur
-Code für den Backend-Server. In Zukunft werde ich Frontend-Seiten [ganyu-web](https://github.com/ksewen/ganyu-web) und
+Momentan ist dieses Projekt in Bearbeitung. In dem finden Sie nur Code für den Backend-Server. In Zukunft werde ich Frontend-Seiten [ganyu-web](https://github.com/ksewen/ganyu-web) und
 noch eine App für IOS anbieten.
 
 ## Konventionen der Codierung
