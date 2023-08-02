@@ -1,6 +1,7 @@
 package com.github.ksewen.ganyu.helper;
 
 import com.github.ksewen.ganyu.environment.SystemInformation;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -14,15 +15,15 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 public class MDCHelpers implements AutoCloseable {
 
-  private final String REQUEST_ID_KEY = "requestId";
+  @VisibleForTesting public final String REQUEST_ID_KEY = "requestId";
 
-  private final String HOSTNAME = "hostname";
+  @VisibleForTesting public final String HOSTNAME = "hostname";
 
-  private final String IP = "ip";
+  @VisibleForTesting public final String IP = "ip";
 
-  private final String ENVIRONMENT = "environment";
+  @VisibleForTesting public final String ENVIRONMENT = "environment";
 
-  private final String APPLICATION_NAME = "applicationName";
+  @VisibleForTesting public final String APPLICATION_NAME = "applicationName";
 
   private final SystemInformation systemInformation;
   private final UUIDHelpers uuidHelpers;
@@ -69,13 +70,13 @@ public class MDCHelpers implements AutoCloseable {
   }
 
   public void initEnvironment() {
-    String environment = this.getSystemInformation();
+    String environment = this.getEnvironment();
     if (!StringUtils.hasLength(environment)) {
       this.put(this.ENVIRONMENT, this.systemInformation.getEnvironment());
     }
   }
 
-  public String getSystemInformation() {
+  public String getEnvironment() {
     return this.getByKey(this.ENVIRONMENT);
   }
 
@@ -94,7 +95,7 @@ public class MDCHelpers implements AutoCloseable {
     return StringUtils.hasLength(this.getRequestId())
         && StringUtils.hasLength(this.getHostname())
         && StringUtils.hasLength(this.getIP())
-        && StringUtils.hasLength(this.getSystemInformation())
+        && StringUtils.hasLength(this.getEnvironment())
         && StringUtils.hasLength(this.getApplicationName());
   }
 
