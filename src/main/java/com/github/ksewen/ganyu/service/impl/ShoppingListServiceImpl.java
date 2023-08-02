@@ -52,7 +52,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
             .build();
     ShoppingList result = this.shoppingListMapper.saveAndFlush(insert);
     if (!CollectionUtils.isEmpty(model.getItemIds())) {
-      this.shoppingListItemService.add(model.getItemIds(), model.getUserId(), insert.getId());
+      this.shoppingListItemService.add(model.getItemIds(), model.getUserId(), result.getId());
     }
     return result;
   }
