@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 @AllArgsConstructor
+@Deprecated
 public class MDCHelpers implements AutoCloseable {
 
   @VisibleForTesting public final String REQUEST_ID_KEY = "requestId";
