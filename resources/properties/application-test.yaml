@@ -53,3 +53,7 @@ application:
       expiration: '86400000'
       refresh-token-expiration: '604800000'
       read-header: Authorization
+
+logging:
+  pattern:
+    level: "%5p ${spring.application.name:test} [%X{traceId:-}-%X{spanId:-}]"
