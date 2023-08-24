@@ -2,7 +2,6 @@ package com.github.ksewen.ganyu.aspect;
 
 import com.github.ksewen.ganyu.environment.SystemInformation;
 import com.github.ksewen.ganyu.helper.JacksonHelpers;
-import com.github.ksewen.ganyu.helper.MDCHelpers;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Aspect
 public class LogTraceAspect {
 
-  @Autowired private MDCHelpers mdcHelpers;
-
   @Autowired private SystemInformation systemInformation;
 
   @Autowired private HttpServletRequest request;
@@ -32,10 +29,6 @@ public class LogTraceAspect {
 
   @Before("pointCut()")
   public void doBefore(JoinPoint joinPoint) {
-    boolean state = this.mdcHelpers.alreadyFinish();
-    if (!state) {
-      this.mdcHelpers.init();
-    }
     log.info(
         "{} start: {}, with arguments: {}",
         this.systemInformation.getApplicationName(),
@@ -51,7 +44,6 @@ public class LogTraceAspect {
         request.getRequestURI(),
         this.jacksonHelpers.toJsonNode(joinPoint.getArgs()),
         exception);
-    this.mdcHelpers.close();
   }
 
   @AfterReturning(value = "pointCut()", returning = "result")
@@ -61,7 +53,6 @@ public class LogTraceAspect {
         this.systemInformation.getApplicationName(),
         request.getRequestURI(),
         this.jacksonHelpers.toJsonNode(result));
-    this.mdcHelpers.close();
   }
 
   @After("pointCut()")
